@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && node scripts/prepare-deploy.mjs",
+    "build:vercel": "vite build",
     "build:dev": "vite build --mode development",
     "start": "node dist/server/index.mjs",
     "preview": "vite preview",

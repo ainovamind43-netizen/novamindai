@@ -5,6 +5,11 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 
+// Vercel builds through its Build Output API (.vercel/output); every other
+// target (Hostinger, a VPS, local preview) gets the plain Node server in
+// ./dist. Vercel sets VERCEL=1 for the duration of the build.
+const onVercel = Boolean(process.env.VERCEL);
+
 export default defineConfig({
   resolve: {
     // Vite 8 resolves the tsconfig "paths" ("@/*") natively.
@@ -39,12 +44,15 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
-    // Self-hosting target. Nitro's default is a Cloudflare worker, which
-    // cannot run on Hostinger; node-server emits a plain Node HTTP server
-    // and output.dir puts the deployable bundle in ./dist.
-    nitro({
-      preset: "node-server",
-      output: { dir: "dist" },
-    }),
+    // Nitro's default is a Cloudflare worker, which runs on neither Vercel nor
+    // a Hostinger Node app. node-server emits a plain Node HTTP server and
+    // output.dir puts the deployable bundle in ./dist; the vercel preset emits
+    // .vercel/output in Vercel's Build Output API format instead — Vercel
+    // serves that as a serverless function, so SSR keeps working there.
+    nitro(
+      onVercel
+        ? { preset: "vercel" }
+        : { preset: "node-server", output: { dir: "dist" } },
+    ),
   ],
 });
