@@ -76,17 +76,21 @@ export function GraphicMotion() {
 
       // Draw connections
       for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
+        if (!a) continue;
         for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+          const b = particles[j];
+          if (!b) continue;
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < connectionDistance) {
             ctx.beginPath();
             ctx.strokeStyle = `rgba(209, 210, 158, ${1 - distance / connectionDistance})`;
             ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
             ctx.stroke();
           }
         }
@@ -118,9 +122,6 @@ export function GraphicMotion() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-    />
+    <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-0 h-full w-full" />
   );
 }
