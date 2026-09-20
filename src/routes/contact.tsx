@@ -75,10 +75,24 @@ const details = [
 const field =
   "w-full rounded-xl border border-border bg-secondary/40 px-4 py-3 text-sm outline-none focus:border-primary";
 
-function Contact() {
-  const [sent, setSent] = useState(false);
+/**
+ * What happened to the last submit, so the page can say something useful.
+ *
+ * There is no server behind this form — it composes a WhatsApp message and
+ * hands it to the browser. That handoff is the one step that can fail silently
+ * (popup blockers), and a visitor who sees "WhatsApp is opening" while nothing
+ * opens is a lead lost with no trace. So the outcome is tracked, and on failure
+ * the same message is offered as a direct link and as an email.
+ */
+type SubmitStatus =
+  | { state: "idle" }
+  | { state: "opened" }
+  | { state: "blocked"; whatsappHref: string; mailtoHref: string };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+function Contact() {
+  const [status, setStatus] = useState<SubmitStatus>({ state: "idle" });
+
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const text = [
@@ -91,12 +105,20 @@ function Contact() {
       `Message: ${String(data.get("message") ?? "")}`,
     ].join("\n");
 
-    window.open(
-      `${contactDetails.whatsappHref}?text=${encodeURIComponent(text)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-    setSent(true);
+    const whatsappHref = `${contactDetails.whatsappHref}?text=${encodeURIComponent(text)}`;
+    const mailtoHref = `mailto:${contactDetails.email}?subject=${encodeURIComponent(
+      "New enquiry from novamindai.info",
+    )}&body=${encodeURIComponent(text)}`;
+
+    // "noopener" must NOT be passed as a window feature here: browsers return
+    // null for a window opened that way even on success, which is precisely the
+    // signal used below to tell a blocked popup from a working one. Severing
+    // `opener` by hand gives the same protection and keeps the return value
+    // meaningful.
+    const win = window.open(whatsappHref, "_blank");
+    if (win) win.opener = null;
+
+    setStatus(win ? { state: "opened" } : { state: "blocked", whatsappHref, mailtoHref });
   }
 
   return (
@@ -197,7 +219,12 @@ function Contact() {
             <label className="text-xs text-muted-foreground" htmlFor="interest">
               Interested in
             </label>
-            <select id="interest" name="interest" className={`${field} mt-1.5`}>
+            {/* No preselected service: without the placeholder the first entry
+                in the list is what a visitor who ignores the field submits. */}
+            <select id="interest" name="interest" className={`${field} mt-1.5`} defaultValue="">
+              <option value="" disabled>
+                Select a service
+              </option>
               {services.map((s) => (
                 <option key={s.title}>{s.title}</option>
               ))}
@@ -216,11 +243,31 @@ function Contact() {
             Opens WhatsApp on{" "}
             <span className="font-semibold text-primary">{contactDetails.phone}</span>
           </p>
-          {sent && (
-            <p className="text-center text-sm text-primary">
-              WhatsApp is opening — send the message and we'll reply within 24 hours.
-            </p>
-          )}
+          {/* Always rendered so the live region exists before it has anything
+              to say — a region that appears with its message already inside it
+              is not reliably announced. */}
+          <p aria-live="polite" className="text-center text-sm text-primary">
+            {status.state === "opened" &&
+              "WhatsApp is opening — send the message and we'll reply within 24 hours."}
+            {status.state === "blocked" && (
+              <>
+                Your browser blocked the WhatsApp window.{" "}
+                <a
+                  href={status.whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold underline"
+                >
+                  Open it here
+                </a>{" "}
+                or{" "}
+                <a href={status.mailtoHref} className="font-semibold underline">
+                  email your enquiry
+                </a>
+                .
+              </>
+            )}
+          </p>
         </form>
       </section>
 

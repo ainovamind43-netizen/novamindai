@@ -9,6 +9,7 @@ import { CardConnectors } from "@/components/site/CardConnectors";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
 import { contactDetails } from "@/lib/contact-details";
 import { HOME_KEYWORDS, faqSchema, pageMeta } from "@/lib/seo";
+import { services } from "@/lib/services-data";
 import heroImg from "@/assets/hero.jpg";
 import teamImg from "@/assets/team.jpg";
 
@@ -353,6 +354,21 @@ function Index() {
               ))}
             </div>
           </Interactive3DCard>
+        </div>
+
+        {/* The same running strip the services page carries under its hero, so
+            the two pages open on the same note. z-20 keeps it above the hero
+            image and the atmosphere canvas, and the list is doubled because
+            the marquee translates itself by -50% — one copy would run out
+            halfway through the loop. */}
+        <div className="relative z-20 overflow-hidden border-t border-border/60 py-4">
+          <div className="marquee-track gap-10 pr-10 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            {[...services, ...services].map((s, i) => (
+              <span key={`${s.title}-${i}`} className="hover-glow whitespace-nowrap">
+                {s.title}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

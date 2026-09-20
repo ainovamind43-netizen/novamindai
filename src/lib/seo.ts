@@ -104,6 +104,8 @@ export const CONTACT_KEYWORDS = [
   "IT company in Pakistan contact",
 ] as const;
 
+export const PRIVACY_KEYWORDS = ["NovaMind AI privacy policy", "how we handle your data"] as const;
+
 /**
  * Canonical link + og:url + keywords for a single page. Canonical and og:url
  * must both be absolute and on the www host. A canonical pointing at the wrong
@@ -280,4 +282,5 @@ export const PAGES = [
   { path: "/services", changefreq: "weekly", priority: "0.9" },
   { path: "/about", changefreq: "monthly", priority: "0.7" },
   { path: "/contact", changefreq: "monthly", priority: "0.8" },
+  { path: "/privacy", changefreq: "yearly", priority: "0.3" },
 ] as const;

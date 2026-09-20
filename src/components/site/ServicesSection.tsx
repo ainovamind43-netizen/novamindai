@@ -20,9 +20,9 @@ export function ServicesSection() {
                   <span className="text-primary">{s.cat}</span>
                   <span className="text-muted-foreground">{s.metric}</span>
                 </div>
-                <h2 className="lift-3d mt-3 text-xl font-bold transition-colors group-hover:text-primary">
+                <h3 className="lift-3d mt-3 text-xl font-bold transition-colors group-hover:text-primary">
                   {s.title}
-                </h2>
+                </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
                 <ul className="mt-5 flex flex-wrap gap-2 text-xs text-muted-foreground">
                   {s.points.map((p) => (

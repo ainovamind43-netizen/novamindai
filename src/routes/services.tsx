@@ -108,6 +108,11 @@ function Services() {
         </div>
       </section>
 
+      {/* The cards below are <h3>, so they need an <h2> above them to hang off.
+          The home page already has one; this page does not, and the heading
+          outline should not skip a level. Screen-reader only — the hero above
+          already says this in visible copy. */}
+      <h2 className="sr-only">All NovaMind AI services</h2>
       <ServicesSection />
 
       {/* A plain-language recap of what is sold and where. This is the block

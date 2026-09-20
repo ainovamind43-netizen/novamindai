@@ -44,18 +44,51 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+/**
+ * Headers the host does not add for us. Hostinger's Node setup and a plain VPS
+ * both serve this process directly, so nothing upstream is setting them, and
+ * these are the four that are safe on every response the site produces —
+ * including static assets. A strict Content-Security-Policy is deliberately not
+ * here: it needs auditing against the inline JSON-LD scripts and the Google
+ * Fonts stylesheet first, and a wrong CSP breaks the page rather than hardening
+ * it. Add it once that audit is done, not before.
+ *
+ * An existing value always wins, so a route or upstream proxy can still set its
+ * own.
+ */
+const SECURITY_HEADERS: Record<string, string> = {
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "SAMEORIGIN",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=()",
+};
+
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(name)) headers.set(name, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return withSecurityHeaders(
+        new Response(renderErrorPage(), {
+          status: 500,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+      );
     }
   },
 };

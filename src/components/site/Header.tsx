@@ -2,21 +2,25 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
-// The section anchors all live on the home route. Putting "#services" in `to`
-// makes the router treat it as a literal path, so nothing ever scrolls — the
-// hash has to be a separate option.
+/**
+ * The nav points at the real routes, not at the home page's section anchors.
+ * /services, /about and /contact are full pages with their own copy and
+ * metadata, and the header is the strongest internal link on the site — sending
+ * it to "#services" left those pages reachable only from the footer, and made
+ * the active state wrong for anyone standing on one of them.
+ */
 type NavLink = {
   label: string;
-  to: "/";
-  hash?: string;
+  to: "/" | "/services" | "/about" | "/contact";
+  /** Only Home highlights on an exact match; the rest stay lit on sub-paths. */
   exact?: boolean;
 };
 
 const links: readonly NavLink[] = [
   { label: "Home", to: "/", exact: true },
-  { label: "Services", to: "/", hash: "services" },
-  { label: "About", to: "/", hash: "about" },
-  { label: "Contact", to: "/", hash: "contact" },
+  { label: "Services", to: "/services" },
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export function Header() {
@@ -39,10 +43,9 @@ export function Header() {
             <Link
               key={l.label}
               to={l.to}
-              {...(l.hash ? { hash: l.hash } : {})}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               activeProps={{ className: "text-primary text-sm font-semibold" }}
-              activeOptions={{ exact: l.exact ?? false, includeHash: true }}
+              activeOptions={{ exact: l.exact ?? false }}
             >
               {l.label}
             </Link>
@@ -55,21 +58,31 @@ export function Header() {
           </Link>
         </div>
 
-        <button className="md:hidden" aria-label="Toggle menu" onClick={() => setOpen((v) => !v)}>
+        <button
+          type="button"
+          className="md:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          onClick={() => setOpen((v) => !v)}
+        >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border md:hidden">
+        <div id="mobile-nav" className="border-t border-border md:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4">
             {links.map((l) => (
               <Link
                 key={l.label}
                 to={l.to}
-                {...(l.hash ? { hash: l.hash } : {})}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-2 py-2.5 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                activeProps={{
+                  className: "rounded-lg px-2 py-2.5 text-sm font-semibold text-primary",
+                }}
+                activeOptions={{ exact: l.exact ?? false }}
               >
                 {l.label}
               </Link>
