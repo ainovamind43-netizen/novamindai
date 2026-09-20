@@ -8,7 +8,7 @@ import { nitro } from "nitro/vite";
 // Vercel builds through its Build Output API (.vercel/output); every other
 // target (Hostinger, a VPS, local preview) gets the plain Node server in
 // ./dist. Vercel sets VERCEL=1 for the duration of the build.
-const onVercel = Boolean(process.env.VERCEL);
+const onVercel = Boolean(process.env["VERCEL"]);
 
 export default defineConfig({
   resolve: {

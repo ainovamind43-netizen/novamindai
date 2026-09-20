@@ -3,7 +3,7 @@ import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Reveal } from "@/components/site/Reveal";
 import { Footer } from "@/components/site/Footer";
-import { GraphicMotion } from "@/components/site/GraphicMotion";
+import { HeroAtmosphere } from "@/components/site/HeroAtmosphere";
 import { ServicesSection } from "@/components/site/ServicesSection";
 import { CardConnectors } from "@/components/site/CardConnectors";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
@@ -229,20 +229,20 @@ function Index() {
 
       {/* Hero */}
       <section className="relative overflow-hidden hero-surface">
-        <GraphicMotion />
+        <HeroAtmosphere />
         <img
           src={heroImg}
           alt=""
           width={1600}
           height={900}
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
+          className="absolute inset-0 z-0 h-full w-full object-cover opacity-35"
         />
         <span className="orb left-[-10%] top-[-15%] h-80 w-80 bg-[var(--olive)]" />
         <span
           className="orb right-[-8%] top-[30%] h-96 w-96 bg-[var(--gold)]"
           style={{ animationDelay: "2s" }}
         />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:py-32">
+        <div className="relative z-20 mx-auto grid max-w-6xl gap-12 px-5 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:py-32">
           <div>
             <span className="eyebrow">One agency · Twelve growth engines</span>
             <h1 className="mt-6 text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
