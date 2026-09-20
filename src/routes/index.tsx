@@ -8,24 +8,30 @@ import { ServicesSection } from "@/components/site/ServicesSection";
 import { CardConnectors } from "@/components/site/CardConnectors";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
 import { contactDetails } from "@/lib/contact-details";
-import { pageMeta } from "@/lib/seo";
+import { HOME_KEYWORDS, faqSchema, pageMeta } from "@/lib/seo";
 import heroImg from "@/assets/hero.jpg";
 import teamImg from "@/assets/team.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => {
-    const { links, meta: urlMeta } = pageMeta("/");
+    const { links, meta: urlMeta } = pageMeta("/", HOME_KEYWORDS);
     return {
       links,
       meta: [
         ...urlMeta,
-        { title: "NovaMind AI — Websites, AI Automation & SEO Growth Agency" },
+        // Keyword-first, brand last: the first ~60 characters are all Google
+        // reliably shows, so "Web Design, AI Automation & SEO Agency" leads and
+        // "NovaMind AI" closes.
+        { title: "Web Design, AI Automation & SEO Agency | NovaMind AI" },
         {
           name: "description",
           content:
-            "NovaMind AI builds websites, AI agents and ERP, POS and custom business software — plus SEO, Meta & Google Ads — and delivers every project to production.",
+            "NovaMind AI is a web design, AI automation and SEO agency building websites, AI agents, ERP, POS and custom software for clients in the US, UK, Gulf and Pakistan.",
         },
-        { property: "og:title", content: "NovaMind AI — Precision Growth for Modern Brands" },
+        {
+          property: "og:title",
+          content: "Web Design, AI Automation & SEO Agency — NovaMind AI",
+        },
         {
           property: "og:description",
           content:
@@ -34,6 +40,7 @@ export const Route = createFileRoute("/")({
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
       ],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(faqSchema(faqs)) }],
     };
   },
   component: Index,
@@ -199,18 +206,44 @@ const testimonials = [
   },
 ];
 
+/**
+ * The visible FAQ is doing double duty: it answers the questions buyers type
+ * into Google before they ever contact an agency, and the same array feeds the
+ * FAQPage schema in head(). Keep the two wired together — schema that
+ * describes questions the page does not show is a mismatch Google can flag.
+ */
 const faqs = [
   {
     q: "What services does NovaMind AI provide?",
     a: "Website design and development, AI agents and automation, SEO, Meta & Google Ads, Android apps — plus custom software engineering, including ERP platforms, POS software, and internal business systems. Every project is delivered to production.",
   },
   {
-    q: "Do I need an existing website to work with NovaMind AI?",
-    a: "No. We build from scratch or improve what you already have — and we'll tell you honestly which one your situation calls for.",
+    q: "How much does a website cost?",
+    a: "It depends on scope. A conversion-focused landing page and a multi-language corporate site with a CMS are very different builds, so we quote after a short discovery call rather than publishing a fake starting price. You get a fixed scope, timeline and budget before any work begins — no hourly surprises.",
   },
   {
-    q: "How long does it take to see results?",
-    a: "Paid media moves within days, SEO compounds over months, and AI automation usually pays for itself in the first few weeks as manual work comes off your team's plate.",
+    q: "Which countries and cities does NovaMind AI serve?",
+    a: "We are a remote-first global team. Most of our clients are in the United States, United Kingdom, Canada and Australia, across the Gulf — Dubai, Abu Dhabi, Riyadh, Doha and Kuwait City — and in Pakistan, where we work with businesses in Lahore, Karachi and Islamabad. We cover every timezone and run projects in English and Urdu.",
+  },
+  {
+    q: "Do you provide POS software for retail shops?",
+    a: "Yes. We build point-of-sale software for single and multi-branch retail and hospitality businesses — fast billing, barcode scanning, inventory sync across branches, live sales reporting, and offline-first operation so billing never stops when the internet drops.",
+  },
+  {
+    q: "Can you build an AI chatbot or AI agent for my business?",
+    a: "Yes. We build custom AI agents and chatbots that answer customer questions, qualify and route leads, handle order and booking enquiries, and clear repetitive back-office work around the clock. They are trained on your own products, pricing and policies — not a generic bot with your logo on it.",
+  },
+  {
+    q: "How long does SEO take to show results?",
+    a: "Technical fixes and on-page work can move rankings within weeks. Competitive commercial keywords — the ones that actually bring buyers — typically take three to six months of consistent content and link building to reach page one, and keep compounding after that. Anyone promising first place in a week is not doing SEO.",
+  },
+  {
+    q: "Do you build ERP software for small and medium businesses?",
+    a: "Yes. We build ERP platforms covering finance, inventory, HR, payroll and procurement, sized for small and mid-sized operations rather than only enterprises. Every system is built around your existing workflow, then handed over with documentation, training and post-launch support.",
+  },
+  {
+    q: "Do I need an existing website to work with NovaMind AI?",
+    a: "No. We build from scratch or improve what you already have — and we'll tell you honestly which one your situation calls for.",
   },
   {
     q: "Do you build software, or only marketing?",
@@ -245,13 +278,18 @@ function Index() {
         <div className="relative z-20 mx-auto grid max-w-6xl gap-12 px-5 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:py-32">
           <div>
             <span className="eyebrow">One agency · Twelve growth engines</span>
+            {/* The H1 is the strongest on-page signal there is, so it names the
+                services in plain language rather than staying purely brand
+                copy. "Web design", "AI automation" and "SEO" are the three
+                terms buyers actually search. */}
             <h1 className="mt-6 text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
-              Scale your brand with <span className="text-shimmer">precision growth</span> you can
-              stand behind.
+              Web design, AI automation and SEO that{" "}
+              <span className="text-shimmer">scale your brand</span>.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Websites, AI agents, SEO, Meta & Google Ads, Android apps, and custom software. One
-              partner, twelve growth engines, end-to-end execution.
+              Websites, AI agents, SEO, Google &amp; Meta Ads, Android apps, ERP and POS software,
+              and custom business systems — one partner, twelve growth engines, end-to-end
+              execution.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="btn-primary shine">
@@ -271,9 +309,9 @@ function Index() {
             </div>
           </div>
 
-          <Interactive3DCard className="panel p-6">
+          <Interactive3DCard className="panel card-beam p-6">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>novamindai.com · growth console</span>
+              <span>novamindai.info · growth console</span>
               <span className="flex items-center gap-1.5 text-primary">
                 <span className="pulse-dot h-2 w-2 rounded-full bg-primary" /> Live
               </span>
@@ -322,7 +360,7 @@ function Index() {
       <section className="mx-auto max-w-6xl px-5 pt-24">
         <span className="eyebrow">Our Services</span>
         <h2 className="mt-5 max-w-2xl text-3xl font-bold sm:text-4xl">
-          Everything your brand needs to scale.
+          Web design, AI, SEO and software — everything your brand needs to scale.
         </h2>
         <ServicesSection />
       </section>
@@ -341,7 +379,7 @@ function Index() {
           {pillars.map((c, i) => (
             <Reveal key={c.title} delay={i * 100} className="h-full">
               <Interactive3DCard className="h-full">
-                <article className="panel h-full p-7">
+                <article className="panel card-beam h-full p-7">
                   <span className="text-[11px] uppercase tracking-widest text-primary">
                     {c.tag}
                   </span>
@@ -371,7 +409,7 @@ function Index() {
             {systems.map((s, i) => (
               <Reveal key={s.title} delay={i * 90} className="h-full">
                 <Interactive3DCard className="h-full">
-                  <article className="panel h-full p-7">
+                  <article className="panel card-beam h-full p-7">
                     <span className="text-[11px] uppercase tracking-widest text-primary">
                       {s.tag}
                     </span>
@@ -431,7 +469,7 @@ function Index() {
             {path.map((p, i) => (
               <Reveal key={p.step} delay={i * 90} className="h-full">
                 <Interactive3DCard className="h-full">
-                  <article className="panel h-full p-6">
+                  <article className="panel card-beam h-full p-6">
                     <div className="flex items-baseline justify-between">
                       <span className="font-display text-2xl font-bold text-primary">{p.step}</span>
                       <span className="text-[11px] text-muted-foreground">{p.time}</span>
@@ -464,7 +502,7 @@ function Index() {
             {why.map((w, i) => (
               <Reveal key={w.n} delay={i * 80} className="h-full">
                 <Interactive3DCard className="h-full">
-                  <article className="panel h-full p-6">
+                  <article className="panel card-beam h-full p-6">
                     <span className="font-display text-sm font-bold text-primary">{w.n}</span>
                     <h3 className="hover-glow mt-3 text-lg font-bold">{w.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
@@ -515,6 +553,13 @@ function Index() {
           Europe, the Middle East, Asia-Pacific, Africa, and Latin America. Whatever your region,
           timezone, or language, we run compliant, localised growth systems around your schedule.
         </p>
+        <p className="mt-4 max-w-3xl text-muted-foreground">
+          That covers businesses in <strong>Dubai</strong>, <strong>Abu Dhabi</strong> and{" "}
+          <strong>Riyadh</strong>; in <strong>London</strong>, <strong>New York</strong>,{" "}
+          <strong>Toronto</strong> and <strong>Sydney</strong>; and in Pakistan, where we take on
+          web design and software projects in <strong>Lahore</strong>, <strong>Karachi</strong> and{" "}
+          <strong>Islamabad</strong>.
+        </p>
         <CardConnectors className="mt-10 grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { v: "30+", l: "Countries served" },
@@ -524,7 +569,7 @@ function Index() {
           ].map((s, i) => (
             <Reveal key={s.l} delay={i * 80}>
               <Interactive3DCard>
-                <div className="panel p-6">
+                <div className="panel card-beam p-6">
                   <div className="font-display text-3xl font-bold text-primary">{s.v}</div>
                   <div className="mt-1 text-sm text-muted-foreground">{s.l}</div>
                 </div>
@@ -595,7 +640,7 @@ function Index() {
           {testimonials.map((t, i) => (
             <Reveal key={t.name} delay={i * 100} className="h-full">
               <Interactive3DCard className="h-full">
-                <figure className="panel h-full p-7">
+                <figure className="panel card-beam h-full p-7">
                   <div className="text-primary">★★★★★</div>
                   <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
                     "{t.quote}"

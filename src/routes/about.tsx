@@ -3,21 +3,21 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Reveal } from "@/components/site/Reveal";
 import { CardConnectors } from "@/components/site/CardConnectors";
-import { pageMeta } from "@/lib/seo";
+import { ABOUT_KEYWORDS, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import teamImg from "@/assets/team.jpg";
 
 export const Route = createFileRoute("/about")({
   head: () => {
-    const { links, meta: urlMeta } = pageMeta("/about");
+    const { links, meta: urlMeta } = pageMeta("/about", ABOUT_KEYWORDS);
     return {
       links,
       meta: [
         ...urlMeta,
-        { title: "About NovaMind AI — Success After Struggle" },
+        { title: "About NovaMind AI | Web Design & Software Company" },
         {
           name: "description",
           content:
-            "Since 2021 NovaMind AI has built websites, AI agents, search visibility, and custom software — including ERP and POS platforms — delivered to production for brands worldwide.",
+            "A web design, AI automation and software company since 2021 — NovaMind AI builds websites, AI agents, ERP, POS and custom business systems for clients worldwide.",
         },
         { property: "og:title", content: "About NovaMind AI" },
         {
@@ -27,6 +27,12 @@ export const Route = createFileRoute("/about")({
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbSchema([{ name: "About", path: "/about" }])),
+        },
       ],
     };
   },
@@ -64,7 +70,10 @@ function About() {
       <section className="hero-surface border-b border-border">
         <div className="mx-auto max-w-6xl px-5 py-24">
           <span className="eyebrow">About NovaMind AI</span>
-          <h1 className="mt-6 text-4xl font-bold sm:text-5xl">Success after struggle.</h1>
+          <h1 className="mt-6 text-4xl font-bold sm:text-5xl">
+            Success after struggle.{" "}
+            <span className="text-shimmer">Web design and software since 2021.</span>
+          </h1>
           <p className="mt-5 max-w-2xl text-muted-foreground">
             Since 2021 we've built websites, AI agents, search visibility, and custom software —
             including ERP and POS platforms — delivered to production for brands worldwide, with one
@@ -91,6 +100,12 @@ function About() {
             We believe long-term success is built on strong foundations, data-driven decisions, and
             transparent communication. Our team focuses on creating sustainable systems — not
             shortcuts — so our clients can grow with stability and clarity.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            We take on projects worldwide: web design and software work for businesses in the United
+            States, the United Kingdom, Canada and Australia; in the Gulf across Dubai, Abu Dhabi,
+            Riyadh and Doha; and in Pakistan, where we build for companies in Lahore, Karachi and
+            Islamabad.
           </p>
           <p className="mt-5 text-sm font-semibold text-primary">— Usman Zafar, Founder</p>
           <Link to="/contact" className="btn-ghost mt-7">

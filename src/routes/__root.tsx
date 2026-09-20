@@ -19,6 +19,7 @@ import {
   SITE_NAME,
   THEME_COLOR,
   organizationSchema,
+  websiteSchema,
 } from "@/lib/seo";
 
 function NotFoundComponent() {
@@ -83,7 +84,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NovaMind AI — Precision Growth Agency" },
+      // Default title and description. Every route overrides both — these are
+      // the fallback for the 404 and error pages, which have no head() of
+      // their own.
+      { title: "Web Design, AI Automation & SEO Agency | NovaMind AI" },
       { name: "description", content: SITE_DESCRIPTION },
       { name: "author", content: SITE_NAME },
       // Google Search Console (URL-prefix property). The matching HTML file
@@ -94,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         name: "robots",
-        content: "index, follow, max-image-preview:large, max-snippet:-1",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       },
       { name: "theme-color", content: THEME_COLOR },
       // Open Graph and Twitter defaults. Each route overrides title,
@@ -123,9 +127,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
-    // Organization markup, emitted on every page so Google can tie the brand,
-    // the site and the contact details together into a single entity.
-    scripts: [{ type: "application/ld+json", children: JSON.stringify(organizationSchema) }],
+    // Runs before first paint. Everything that starts hidden — the scroll
+    // reveals — is scoped to `.js`, so this class is the single switch that
+    // decides whether anything is allowed to hide itself. If scripts are
+    // blocked or fail, the switch never flips and the page renders in full.
+    //
+    // Then the two entity blocks, so Google can tie the brand, the site and
+    // the contact details together.
+    scripts: [
+      { type: "text/javascript", children: 'document.documentElement.classList.add("js")' },
+      { type: "application/ld+json", children: JSON.stringify(organizationSchema) },
+      { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

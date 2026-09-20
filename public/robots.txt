@@ -1,4 +1,15 @@
+# NovaMind AI — https://www.novamindai.info
+#
+# Everything here is public marketing copy, so every crawler is welcome. The
+# named groups below exist only to be explicit about the AI answer engines: a
+# growing share of "web design company in Dubai" style questions are answered
+# inside ChatGPT, Perplexity and Gemini now, and a brand that is not crawlable
+# cannot be cited in those answers.
+
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
 Allow: /
 
 User-agent: Bingbot
@@ -10,6 +21,32 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+# AI answer engines — allowed on purpose, so the brand can be cited.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Everything else.
 User-agent: *
 Allow: /
 

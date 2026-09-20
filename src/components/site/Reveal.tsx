@@ -15,6 +15,14 @@ export function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Without IntersectionObserver the reveal can never fire, and the card
+    // would stay at opacity 0 forever. Show it instead of losing it.
+    if (typeof IntersectionObserver === "undefined") {
+      setShown(true);
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -24,7 +32,11 @@ export function Reveal({
           }
         });
       },
-      { threshold: 0.12 },
+      // threshold 0.12 could never be met by a card taller than the viewport,
+      // which left tall cards permanently invisible. A near-zero threshold
+      // fires on the first pixel, and the positive bottom rootMargin reveals
+      // slightly before the card scrolls into view so it never appears blank.
+      { threshold: 0.01, rootMargin: "0px 0px 12% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();

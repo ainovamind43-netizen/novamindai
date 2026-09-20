@@ -5,20 +5,35 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { services } from "@/lib/services-data";
 import { contactDetails } from "@/lib/contact-details";
-import { pageMeta } from "@/lib/seo";
+import { CONTACT_KEYWORDS, SITE_URL, breadcrumbSchema, pageMeta } from "@/lib/seo";
+
+/**
+ * ContactPage markup, linked back to the Organization by @id. It tells Google
+ * this is the page to surface for "how do I contact" style queries rather than
+ * a service page, which matters once the site ranks for the brand name.
+ */
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact NovaMind AI",
+  url: `${SITE_URL}/contact`,
+  description:
+    "Contact NovaMind AI for a free website, SEO or software audit. We reply within 24 hours.",
+  mainEntity: { "@id": `${SITE_URL}/#organization` },
+};
 
 export const Route = createFileRoute("/contact")({
   head: () => {
-    const { links, meta: urlMeta } = pageMeta("/contact");
+    const { links, meta: urlMeta } = pageMeta("/contact", CONTACT_KEYWORDS);
     return {
       links,
       meta: [
         ...urlMeta,
-        { title: "Contact NovaMind AI — Free Growth Audit" },
+        { title: "Contact NovaMind AI — Free Website & SEO Audit" },
         {
           name: "description",
           content:
-            "Tell NovaMind AI about your brand and where you want to grow. We reply within 24 hours with a free audit and recommended next steps.",
+            "Get a free website audit or SEO audit from NovaMind AI. Tell us about your project — web design, AI automation, ERP or POS software — and we reply within 24 hours.",
         },
         { property: "og:title", content: "Let's build something great — NovaMind AI" },
         {
@@ -27,6 +42,13 @@ export const Route = createFileRoute("/contact")({
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
+      ],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(contactSchema) },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbSchema([{ name: "Contact", path: "/contact" }])),
+        },
       ],
     };
   },
@@ -60,7 +82,7 @@ function Contact() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const text = [
-      "New enquiry from novamindai.com",
+      "New enquiry from novamindai.info",
       `Name: ${String(data.get("name") ?? "")}`,
       `Email: ${String(data.get("email") ?? "")}`,
       `Company: ${String(data.get("company") ?? "")}`,
@@ -84,7 +106,10 @@ function Contact() {
       <section className="hero-surface border-b border-border">
         <div className="mx-auto max-w-6xl px-5 py-24">
           <span className="eyebrow">Contact</span>
-          <h1 className="mt-6 text-4xl font-bold sm:text-5xl">Let's build something great.</h1>
+          <h1 className="mt-6 text-4xl font-bold sm:text-5xl">
+            Let's build something great.{" "}
+            <span className="text-shimmer">Start with a free audit.</span>
+          </h1>
           <p className="mt-5 max-w-2xl text-muted-foreground">
             Tell us about your brand and where you want to grow — we'll come back with a roadmap and
             pricing.
@@ -197,6 +222,54 @@ function Contact() {
             </p>
           )}
         </form>
+      </section>
+
+      {/* Service-area block. Location terms only carry weight when they sit in
+          real copy on a real page, so this is written as something a visitor
+          would want to know — where we work and what we can be hired for —
+          rather than as a list of place names. */}
+      <section className="border-t border-border bg-card/30">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <h2 className="text-2xl font-bold">Where we work, and what you can hire us for</h2>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            NovaMind AI is a remote-first web design, AI automation and software company. We take on
+            projects worldwide and work in overlapping hours so there is always someone on your
+            account during your working day.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                h: "Pakistan",
+                b: "Web design, software and SEO projects in Lahore, Karachi, Islamabad and Rawalpindi — plus ERP and POS software for retail and distribution businesses nationwide.",
+              },
+              {
+                h: "UAE & Saudi Arabia",
+                b: "Web development, digital marketing and custom software for companies in Dubai, Abu Dhabi, Sharjah, Riyadh, Jeddah and Doha.",
+              },
+              {
+                h: "United States & Canada",
+                b: "Website design, SEO and AI automation for businesses in New York, Toronto, Vancouver and across North America.",
+              },
+              {
+                h: "United Kingdom & Europe",
+                b: "Web design, Google Ads management and SEO services for clients in London, Manchester, Birmingham and across the UK and EU.",
+              },
+              {
+                h: "Australia & Asia-Pacific",
+                b: "Websites, ad campaigns and software systems for businesses in Sydney, Melbourne, Brisbane and Singapore.",
+              },
+              {
+                h: "Hire a specialist",
+                b: "Looking to hire a web developer, an SEO expert, an AI automation engineer or an ERP consultant? Send the brief and we will scope it.",
+              },
+            ].map((a) => (
+              <div key={a.h} className="panel card-beam p-6">
+                <h3 className="text-base font-bold">{a.h}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <Footer />

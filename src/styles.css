@@ -142,8 +142,13 @@
 
 @utility panel {
   background-color: var(--card);
-  border: 1px solid var(--border);
+  /* Was var(--border) at 55% alpha — barely above the page background, which
+     made cards read as empty space rather than as cards. A brighter, more
+     opaque edge plus a soft drop shadow separates every panel from the page
+     without touching the shared colour tokens. */
+  border: 1px solid oklch(0.44 0.05 105 / 70%);
   border-radius: var(--radius-2xl);
+  box-shadow: 0 20px 44px -30px oklch(0 0 0 / 85%);
 }
 
 @utility eyebrow {
@@ -357,6 +362,73 @@
   transform: translateZ(38px);
 }
 
+/* ---------- Card beam ----------
+   A lit segment that travels the whole perimeter of a card — along the top,
+   down the right, back along the bottom, up the left — so the line reads as
+   running around all four sides rather than sweeping one edge.
+
+   Implemented as a masked 1px ring so it sits exactly on the border and never
+   paints over the card's own background. @property is what makes it animatable:
+   without a registered custom property the conic angle cannot be interpolated
+   and the beam would jump instead of travel. */
+
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes beam-spin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+@utility card-beam {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    /* Ring thickness. The mask below cuts this band out as the border, so this
+       single value is the beam's weight — raise it to make the line heavier. */
+    padding: 3.5px;
+    background: conic-gradient(
+      from var(--beam-angle),
+      transparent 0turn,
+      transparent 0.6turn,
+      oklch(0.86 0.16 90 / 25%) 0.76turn,
+      oklch(0.98 0.06 95) 0.92turn,
+      oklch(0.86 0.16 90 / 40%) 0.995turn,
+      transparent 1turn
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: beam-spin 6s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Each card starts at a different point on the circle, so a grid of them
+     does not pulse in lockstep — it reads as ambient motion instead. */
+  &:nth-child(2n)::before {
+    animation-delay: -1.5s;
+  }
+  &:nth-child(3n)::before {
+    animation-delay: -3s;
+  }
+  &:nth-child(5n)::before {
+    animation-delay: -4.5s;
+  }
+}
+
 @utility hover-glow {
   transition:
     color 0.25s ease,
@@ -453,7 +525,13 @@
   animation: spin-slow 26s linear infinite;
 }
 
-@utility reveal {
+/* Scroll-reveal. Written as plain CSS rather than a @utility so the hidden
+   state can be gated behind `.js` — a class an inline script in the document
+   head sets before first paint. If scripts are blocked, fail to load, or throw
+   during hydration, that class is never added and every card renders at full
+   opacity. Content that only exists when JavaScript works is content you can
+   lose; this keeps the animation without that risk. */
+.js .reveal {
   opacity: 0;
   transform: translateY(28px);
   transition:
@@ -461,7 +539,7 @@
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@utility reveal-in {
+.js .reveal-in {
   opacity: 1;
   transform: translateY(0);
 }
@@ -473,5 +551,11 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  /* A frozen beam would sit as a bright blob on one edge, which is worse than
+     no beam at all. Drop it entirely for anyone who asked for less motion. */
+  .card-beam::before {
+    display: none;
   }
 }
