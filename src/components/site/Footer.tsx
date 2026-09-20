@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, Clock, Zap } from "lucide-react";
+import { Mail, Clock, Zap, MessageCircle } from "lucide-react";
 import { contactDetails } from "@/lib/contact-details";
 
 export function Footer() {
@@ -11,8 +11,8 @@ export function Footer() {
             NovaMind <span className="text-primary">AI</span>
           </span>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            One partner, twelve growth engines. Websites, AI agents, SEO, paid media,
-            apps and custom software — end-to-end execution for brands worldwide.
+            One partner, twelve growth engines. Websites, AI agents, SEO, paid media, apps and
+            custom software — end-to-end execution for brands worldwide.
           </p>
         </div>
 
@@ -51,11 +51,13 @@ export function Footer() {
             </li>
             <li>
               <a
-                href={contactDetails.phoneHref}
+                href={contactDetails.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-foreground"
               >
-                <Phone className="h-3.5 w-3.5 shrink-0" />
-                {contactDetails.phone}
+                <MessageCircle className="h-3.5 w-3.5 shrink-0" />
+                WhatsApp
               </a>
             </li>
             <li className="inline-flex items-center gap-2">

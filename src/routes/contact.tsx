@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, Phone, Clock, Zap, MessageCircle } from "lucide-react";
+import { Mail, Clock, Zap, MessageCircle } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { services } from "@/lib/services-data";
@@ -39,12 +39,6 @@ const details = [
     k: "Email",
     v: contactDetails.email,
     href: `mailto:${contactDetails.email}`,
-  },
-  {
-    icon: Phone,
-    k: "Phone",
-    v: contactDetails.phone,
-    href: contactDetails.phoneHref,
   },
   { icon: Clock, k: "Hours", v: contactDetails.hours },
   {
@@ -96,8 +90,13 @@ function Contact() {
             pricing.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href={contactDetails.phoneHref} className="btn-primary shine">
-              <Phone className="h-4 w-4" /> Call {contactDetails.phone}
+            <a
+              href={contactDetails.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary shine"
+            >
+              <MessageCircle className="h-4 w-4" /> WhatsApp us
             </a>
             <Link to="/services" className="btn-ghost">
               Browse services
@@ -111,7 +110,7 @@ function Contact() {
           <h2 className="text-3xl font-bold">Send us a message.</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             Tell us about your brand. We'll respond within 24 hours with a free audit and
-            recommended next steps — or call us directly if you'd rather talk it through.
+            recommended next steps — or message us on WhatsApp if you'd rather talk it through.
           </p>
           <div className="mt-8 space-y-4">
             {details.map((i) => (
@@ -164,7 +163,7 @@ function Contact() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder={contactDetails.phone}
+                placeholder="Your phone or WhatsApp"
                 className={`${field} mt-1.5`}
               />
             </div>
@@ -189,10 +188,8 @@ function Contact() {
             Send Message
           </button>
           <p className="text-center text-xs text-muted-foreground">
-            Opens WhatsApp on {contactDetails.phone} — or call us on{" "}
-            <a href={contactDetails.phoneHref} className="font-semibold text-primary">
-              {contactDetails.phone}
-            </a>
+            Opens WhatsApp on{" "}
+            <span className="font-semibold text-primary">{contactDetails.phone}</span>
           </p>
           {sent && (
             <p className="text-center text-sm text-primary">

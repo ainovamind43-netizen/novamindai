@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Phone } from "lucide-react";
+import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Reveal } from "@/components/site/Reveal";
 import { Footer } from "@/components/site/Footer";
@@ -399,8 +399,13 @@ function Index() {
             <Link to="/contact" className="btn-primary shine">
               Discuss your project <ArrowRight className="h-4 w-4" />
             </Link>
-            <a href={contactDetails.phoneHref} className="btn-ghost">
-              <Phone className="h-4 w-4" /> {contactDetails.phone}
+            <a
+              href={contactDetails.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost"
+            >
+              <MessageCircle className="h-4 w-4" /> WhatsApp
             </a>
           </div>
         </div>
@@ -645,8 +650,14 @@ function Index() {
               Have a project in mind? Let's get to work.
             </h2>
             <p className="relative mt-4 text-muted-foreground">
-              Drop your email and we'll send a free strategy audit within 24 hours — or call us on{" "}
-              <a href={contactDetails.phoneHref} className="font-semibold text-primary">
+              Drop your email and we'll send a free strategy audit within 24 hours — or message us
+              on WhatsApp at{" "}
+              <a
+                href={contactDetails.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary"
+              >
                 {contactDetails.phone}
               </a>
               .
@@ -655,8 +666,13 @@ function Index() {
               <Link to="/contact" className="btn-primary shine">
                 Get Audit <Check className="h-4 w-4" />
               </Link>
-              <a href={contactDetails.phoneHref} className="btn-ghost">
-                <Phone className="h-4 w-4" /> {contactDetails.phone}
+              <a
+                href={contactDetails.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost"
+              >
+                <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
           </div>
