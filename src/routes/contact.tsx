@@ -5,25 +5,31 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { services } from "@/lib/services-data";
 import { contactDetails } from "@/lib/contact-details";
+import { pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact NovaMind AI — Free Growth Audit" },
-      {
-        name: "description",
-        content:
-          "Tell NovaMind AI about your brand and where you want to grow. We reply within 24 hours with a free audit and recommended next steps.",
-      },
-      { property: "og:title", content: "Let's build something great — NovaMind AI" },
-      {
-        property: "og:description",
-        content: "Free audit and roadmap for your website, AI, SEO and paid media plans.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const { links, meta: urlMeta } = pageMeta("/contact");
+    return {
+      links,
+      meta: [
+        ...urlMeta,
+        { title: "Contact NovaMind AI — Free Growth Audit" },
+        {
+          name: "description",
+          content:
+            "Tell NovaMind AI about your brand and where you want to grow. We reply within 24 hours with a free audit and recommended next steps.",
+        },
+        { property: "og:title", content: "Let's build something great — NovaMind AI" },
+        {
+          property: "og:description",
+          content: "Free audit and roadmap for your website, AI, SEO and paid media plans.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
   component: Contact,
 });
 

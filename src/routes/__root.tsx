@@ -10,6 +10,16 @@ import {
 import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import {
+  OG_IMAGE,
+  OG_IMAGE_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  THEME_COLOR,
+  organizationSchema,
+} from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -74,12 +84,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "NovaMind AI — Precision Growth Agency" },
+      { name: "description", content: SITE_DESCRIPTION },
+      { name: "author", content: SITE_NAME },
+      // Google Search Console (URL-prefix property). The matching HTML file
+      // lives in public/ as a second method — remove neither.
       {
-        name: "description",
-        content:
-          "NovaMind AI builds websites, AI automation, SEO, paid media and custom software for brands worldwide.",
+        name: "google-site-verification",
+        content: "gLNut40aw8KixNwim7KJ6d_kNb9zuyicMuSmxKA2SGc",
       },
-      { name: "author", content: "NovaMind AI" },
+      {
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1",
+      },
+      { name: "theme-color", content: THEME_COLOR },
+      // Open Graph and Twitter defaults. Each route overrides title,
+      // description and url; the image and card type stay site-wide.
+      { property: "og:site_name", content: SITE_NAME },
+      { property: "og:type", content: "website" },
+      { property: "og:locale", content: "en_US" },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: OG_IMAGE_WIDTH },
+      { property: "og:image:height", content: OG_IMAGE_HEIGHT },
+      { property: "og:image:alt", content: OG_IMAGE_ALT },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: OG_IMAGE_ALT },
     ],
     links: [
       {
@@ -94,6 +123,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
+    // Organization markup, emitted on every page so Google can tie the brand,
+    // the site and the contact details together into a single entity.
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(organizationSchema) }],
   }),
   shellComponent: RootShell,
   component: RootComponent,

@@ -3,29 +3,50 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Reveal } from "@/components/site/Reveal";
 import { services } from "@/lib/services-data";
+import { pageMeta } from "@/lib/seo";
 import { ServicesSection } from "@/components/site/ServicesSection";
 
 export const Route = createFileRoute("/services")({
-  head: () => ({
-    meta: [
-      { title: "Services — NovaMind AI Growth Engines" },
-      {
-        name: "description",
-        content:
-          "Website design and build, AI agents, SEO, Meta & Google Ads, Android apps, ERP and POS software, and custom business systems — delivered to production by NovaMind AI.",
-      },
-      { property: "og:title", content: "All services. One partner. — NovaMind AI" },
-      {
-        property: "og:description",
-        content:
-          "Websites, AI agents, SEO, ads, apps, and delivered software engineering — ERP, POS and custom business systems.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const { links, meta: urlMeta } = pageMeta("/services");
+    return {
+      links,
+      meta: [
+        ...urlMeta,
+        { title: "Services — NovaMind AI Growth Engines" },
+        {
+          name: "description",
+          content:
+            "Website design and build, AI agents, SEO, Meta & Google Ads, Android apps, ERP and POS software, and custom business systems — delivered to production by NovaMind AI.",
+        },
+        { property: "og:title", content: "All services. One partner. — NovaMind AI" },
+        {
+          property: "og:description",
+          content:
+            "Websites, AI agents, SEO, ads, apps, and delivered software engineering — ERP, POS and custom business systems.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(serviceCatalog) }],
+    };
+  },
   component: Services,
 });
+
+/**
+ * The service list as schema.org offers. Built here rather than in lib/seo so
+ * the copy only ships on the page that actually shows it.
+ */
+const serviceCatalog = {
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "NovaMind AI services",
+  itemListElement: services.map((s) => ({
+    "@type": "Offer",
+    itemOffered: { "@type": "Service", name: s.title, description: s.body },
+  })),
+};
 
 function Services() {
   return (

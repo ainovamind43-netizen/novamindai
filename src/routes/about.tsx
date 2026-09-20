@@ -3,27 +3,33 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Reveal } from "@/components/site/Reveal";
 import { CardConnectors } from "@/components/site/CardConnectors";
+import { pageMeta } from "@/lib/seo";
 import teamImg from "@/assets/team.jpg";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About NovaMind AI — Success After Struggle" },
-      {
-        name: "description",
-        content:
-          "Since 2021 NovaMind AI has built websites, AI agents, search visibility, and custom software — including ERP and POS platforms — delivered to production for brands worldwide.",
-      },
-      { property: "og:title", content: "About NovaMind AI" },
-      {
-        property: "og:description",
-        content:
-          "A remote-first global team building sustainable, data-driven growth systems for modern brands.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const { links, meta: urlMeta } = pageMeta("/about");
+    return {
+      links,
+      meta: [
+        ...urlMeta,
+        { title: "About NovaMind AI — Success After Struggle" },
+        {
+          name: "description",
+          content:
+            "Since 2021 NovaMind AI has built websites, AI agents, search visibility, and custom software — including ERP and POS platforms — delivered to production for brands worldwide.",
+        },
+        { property: "og:title", content: "About NovaMind AI" },
+        {
+          property: "og:description",
+          content:
+            "A remote-first global team building sustainable, data-driven growth systems for modern brands.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
   component: About,
 });
 

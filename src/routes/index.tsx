@@ -8,28 +8,34 @@ import { ServicesSection } from "@/components/site/ServicesSection";
 import { CardConnectors } from "@/components/site/CardConnectors";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
 import { contactDetails } from "@/lib/contact-details";
+import { pageMeta } from "@/lib/seo";
 import heroImg from "@/assets/hero.jpg";
 import teamImg from "@/assets/team.jpg";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "NovaMind AI — Websites, AI Automation & SEO Growth Agency" },
-      {
-        name: "description",
-        content:
-          "NovaMind AI builds websites, AI agents and ERP, POS and custom business software — plus SEO, Meta & Google Ads — and delivers every project to production.",
-      },
-      { property: "og:title", content: "NovaMind AI — Precision Growth for Modern Brands" },
-      {
-        property: "og:description",
-        content:
-          "Real projects, really delivered. Websites, AI agents, SEO, paid media, ERP platforms, POS software and custom business systems.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const { links, meta: urlMeta } = pageMeta("/");
+    return {
+      links,
+      meta: [
+        ...urlMeta,
+        { title: "NovaMind AI — Websites, AI Automation & SEO Growth Agency" },
+        {
+          name: "description",
+          content:
+            "NovaMind AI builds websites, AI agents and ERP, POS and custom business software — plus SEO, Meta & Google Ads — and delivers every project to production.",
+        },
+        { property: "og:title", content: "NovaMind AI — Precision Growth for Modern Brands" },
+        {
+          property: "og:description",
+          content:
+            "Real projects, really delivered. Websites, AI agents, SEO, paid media, ERP platforms, POS software and custom business systems.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
   component: Index,
 });
 
