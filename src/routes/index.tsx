@@ -264,12 +264,15 @@ function Index() {
       {/* Hero */}
       <section className="relative overflow-hidden hero-surface">
         <HeroAtmosphere />
+        {/* Decorative, and tuned per theme: a dark photo at 35% over the dark
+            hero reads as depth, but the same 35% over the light theme's cream
+            reads as a grey wash sitting on the page. */}
         <img
           src={heroImg}
           alt=""
           width={1600}
           height={900}
-          className="absolute inset-0 z-0 h-full w-full object-cover opacity-35"
+          className="absolute inset-0 z-0 h-full w-full object-cover opacity-35 light:opacity-10"
         />
         <span className="orb left-[-10%] top-[-15%] h-80 w-80 bg-[var(--olive)]" />
         <span

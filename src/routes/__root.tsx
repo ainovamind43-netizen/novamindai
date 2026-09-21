@@ -127,15 +127,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
-    // Runs before first paint. Everything that starts hidden — the scroll
-    // reveals — is scoped to `.js`, so this class is the single switch that
-    // decides whether anything is allowed to hide itself. If scripts are
-    // blocked or fail, the switch never flips and the page renders in full.
+    // Runs before first paint.
     //
-    // Then the two entity blocks, so Google can tie the brand, the site and
+    // First, `.js`: everything that starts hidden — the scroll reveals — is
+    // scoped to that class, so it is the single switch deciding whether anything
+    // is allowed to hide itself. If scripts are blocked or fail, the switch
+    // never flips and the page renders in full. It is added outside the try on
+    // purpose — a localStorage failure must never take the reveals down with it.
+    //
+    // Then the stored theme. Dark is the default: `.light` is only added when
+    // the visitor has actually chosen it, so a blocked or failed script leaves
+    // the site in the dark theme rather than flashing one and settling on the
+    // other. The class has to land here, before the first paint, or a light-mode
+    // visitor sees a dark frame flash on every navigation.
+    //
+    // The key below must match THEME_STORAGE_KEY in src/lib/theme.ts.
+    //
+    // Finally the two entity blocks, so Google can tie the brand, the site and
     // the contact details together.
     scripts: [
-      { type: "text/javascript", children: 'document.documentElement.classList.add("js")' },
+      {
+        type: "text/javascript",
+        children:
+          'document.documentElement.classList.add("js");try{if(localStorage.getItem("novamind-theme")==="light")document.documentElement.classList.add("light")}catch(e){}',
+      },
       { type: "application/ld+json", children: JSON.stringify(organizationSchema) },
       { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
     ],

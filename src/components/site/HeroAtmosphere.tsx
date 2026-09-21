@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTheme } from "@/lib/theme";
 
 type Rgb = [number, number, number];
 
@@ -116,13 +117,30 @@ type Stage = {
  *
  * Returns the teardown.
  */
-function runEmbers({ canvas, ctx, host }: Stage): () => void {
+function runEmbers({ canvas, ctx, host, light }: Stage & { light: boolean }): () => void {
   // The user asked for less motion; draw one frame and stop.
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /**
+   * Sparks are light *added* to a dark ground, which is what `lighter`
+   * compositing does. There is nothing to add light to on a pale ground —
+   * `lighter` there just washes everything toward white and the field vanishes.
+   * So the light theme inverts the whole treatment: normal compositing, and
+   * colours darker than the page instead of brighter, so the same drift reads as
+   * motes of dust rather than as sparks.
+   *
+   * The glow is also tightened, and only there. Darkening the spark *and*
+   * dropping its alpha is the obvious move and it is wrong: the colour is
+   * already carrying the contrast, so scaling the alpha down as well leaves the
+   * field at roughly half the visible contrast of the dark one — technically
+   * drawn, still unreadable. The alpha stays as it is and the colour does the
+   * whole job.
+   */
+  const glowScale = light ? 5 : GLOW_SCALE;
+
   let gold = FALLBACK_GOLD;
-  let core = lighten(FALLBACK_GOLD, 0.55);
-  let emberDeep = darken(FALLBACK_GOLD, 0.3);
+  let core = light ? darken(FALLBACK_GOLD, 0.4) : lighten(FALLBACK_GOLD, 0.55);
+  let emberDeep = darken(FALLBACK_GOLD, light ? 0.75 : 0.3);
 
   let width = 0;
   let height = 0;
@@ -135,8 +153,8 @@ function runEmbers({ canvas, ctx, host }: Stage): () => void {
 
   function loadPalette() {
     gold = token("--gold", FALLBACK_GOLD);
-    core = lighten(gold, 0.55);
-    emberDeep = darken(gold, 0.3);
+    core = light ? darken(gold, 0.4) : lighten(gold, 0.55);
+    emberDeep = darken(gold, light ? 0.75 : 0.3);
   }
 
   function resize() {
@@ -172,9 +190,10 @@ function runEmbers({ canvas, ctx, host }: Stage): () => void {
       return;
     }
 
-    // Additive: sparks are light, so where two overlap they brighten into a
-    // hotter point rather than one covering the other.
-    ctx.globalCompositeOperation = "lighter";
+    // Additive on dark: sparks are light, so where two overlap they brighten
+    // into a hotter point rather than one covering the other. On light the
+    // opposite is wanted — overlapping motes deepen rather than blow out.
+    ctx.globalCompositeOperation = light ? "source-over" : "lighter";
 
     for (const e of embers) {
       // Rise, sway and flicker all advance on real elapsed time, so the drift
@@ -195,7 +214,7 @@ function runEmbers({ canvas, ctx, host }: Stage): () => void {
       // The flicker never reaches zero — a spark that blinks fully out reads
       // as a dropped frame, not as a flame.
       const a = e.alpha * (0.55 + 0.45 * Math.sin(e.flicker));
-      const r = e.radius * GLOW_SCALE;
+      const r = e.radius * glowScale;
 
       const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
       grad.addColorStop(0, rgba(core, a));
@@ -276,10 +295,20 @@ function runEmbers({ canvas, ctx, host }: Stage): () => void {
  * orange — #ffd682 through #d98c28 — which sat beside the olive and gold as a
  * third, unrelated hue. These are driven off --gold: a white-hot core, the
  * gold itself as the body, and a darkened gold fading out at the rim.
+ *
+ * That applies to the dark theme. The light theme keeps the same drift but
+ * inverts the treatment — see the note in runEmbers; additively-bright sparks
+ * are invisible against cream, so there they are darker motes composited
+ * normally.
  */
 export function HeroAtmosphere() {
+  const { theme } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const light = theme === "light";
 
+  // Keyed on the theme rather than on nothing: the palette *and* the
+  // compositing mode both change with it, so the field is torn down and rebuilt
+  // instead of being left running with the previous theme's settings.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -290,8 +319,8 @@ export function HeroAtmosphere() {
     const host = canvas.parentElement;
     if (!host) return;
 
-    return runEmbers({ canvas, ctx, host });
-  }, []);
+    return runEmbers({ canvas, ctx, host, light });
+  }, [light]);
 
   return (
     <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10 h-full w-full" />

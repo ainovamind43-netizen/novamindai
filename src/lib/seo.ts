@@ -33,6 +33,11 @@ export const OG_IMAGE_ALT =
 /** oklch(0.16 0.022 105) — the --background token in src/styles.css. */
 export const THEME_COLOR = "#0f0e04";
 
+/** oklch(0.98 0.006 95) — the same token under `:root.light` in styles.css.
+ *  Kept as a literal because the head is server-rendered: the light value has
+ *  to be correct before any script has had a chance to read the DOM. */
+export const THEME_COLOR_LIGHT = "#faf8f4";
+
 /**
  * Keyword banks, one per page.
  *

@@ -4,6 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/**
+ * The site is dark by default and `.light` is the opt-in. The class is set on
+ * <html> before first paint by the inline script in src/routes/__root.tsx, so
+ * `light:` utilities resolve on the first painted frame rather than after
+ * hydration.
+ */
+@custom-variant light (&:is(.light *));
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -66,6 +74,127 @@
     linear-gradient(160deg, oklch(0.2 0.03 105), oklch(0.13 0.02 105));
   --gradient-gold: linear-gradient(100deg, var(--olive), var(--gold));
   --shadow-glow: 0 24px 70px -28px oklch(0.82 0.15 92 / 45%);
+
+  /* ---------- Surface tokens ----------
+     Every value below was previously a literal inside the @utility block that
+     used it. They are tokens now so the light theme can restate them without
+     each utility needing two definitions. The dark values are unchanged — this
+     refactor is deliberately a no-op in the default theme. */
+
+  --panel-border: oklch(0.44 0.05 105 / 70%);
+  --panel-shadow: 0 20px 44px -30px oklch(0 0 0 / 85%);
+  --card-hover-shadow: 0 32px 60px -30px oklch(0.82 0.15 92 / 40%);
+  --card-hover-border: oklch(0.82 0.15 92 / 55%);
+
+  /* The lit segment travelling the card border. `strong` is the white-hot head
+     of the sweep; on a light ground it has to invert to stay visible. */
+  --beam-soft: oklch(0.86 0.16 90 / 25%);
+  --beam-strong: oklch(0.98 0.06 95);
+  --beam-tail: oklch(0.86 0.16 90 / 40%);
+
+  --connector: oklch(0.82 0.15 92 / 60%);
+  --connector-dot: var(--gold);
+  --connector-glow: 0 0 14px 4px oklch(0.86 0.16 90 / 65%);
+
+  --hover-glow-shadow: 0 0 18px oklch(0.82 0.15 92 / 45%);
+  --chip-hover-bg: oklch(0.82 0.15 92 / 10%);
+  --chip-hover-border: oklch(0.82 0.15 92 / 60%);
+  --shine: oklch(1 0 0 / 45%);
+  --orb-opacity: 0.5;
+  --pulse-ring: oklch(0.82 0.15 92 / 60%);
+
+  /* The pointer-driven highlight on Interactive3DCard. A white glare is
+     invisible against a white card, so light mode darkens it instead. */
+  --glare: rgb(255 255 255 / 15%);
+
+  /* Shimmer stops. `c` is the white-hot middle of the sweep and is the stop
+     that disappears first on a pale ground. */
+  --shimmer-a: var(--olive);
+  --shimmer-b: var(--gold);
+  --shimmer-c: oklch(0.97 0.05 95);
+}
+
+/**
+ * Light theme.
+ *
+ * Two things drive these values. First, `--gold` at oklch(0.86) is tuned to
+ * glow against near-black and is far too pale to read as text on white; the
+ * brand gold therefore splits — `--gold` stays light enough to carry dark
+ * button labels, while `--primary`, which is used as a *text* colour by
+ * .eyebrow, .hover-glow and the stat figures, darkens to clear 4.5:1.
+ *
+ * Second, every glow in the dark theme is light *added* to a dark ground. On a
+ * pale ground that reads as smudge, so the shadows, beam and orbs all drop
+ * their opacity and the beam's white-hot head inverts to a dark one.
+ *
+ * Measured WCAG ratios, so a later tweak knows what it is breaking. Body text
+ * needs 4.5:1; the shimmer and the large stat figures need 3:1.
+ *
+ *   foreground        on background   15.5:1
+ *   muted-foreground  on background    5.6:1
+ *   primary           on background    5.2:1   on card 5.5:1
+ *   .btn-primary label on the gradient  4.7:1 (olive end) / 7.8:1 (gold end)
+ *   shimmer stops     on card       7.7:1 / 4.7:1 / 7.7:1
+ *
+ * The olive stop is the tight one: at oklch(0.58) it lands on 4.30:1 against
+ * the dark label, which fails. 0.60 is the value that clears it.
+ */
+:root.light {
+  --background: oklch(0.98 0.006 95);
+  --foreground: oklch(0.24 0.03 105);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.03 105);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.03 105);
+  --primary: oklch(0.52 0.13 85);
+  --primary-foreground: oklch(0.2 0.04 100);
+  --secondary: oklch(0.94 0.012 100);
+  --secondary-foreground: oklch(0.24 0.03 105);
+  --muted: oklch(0.95 0.01 100);
+  --muted-foreground: oklch(0.5 0.025 100);
+  --accent: oklch(0.6 0.1 112);
+  --accent-foreground: oklch(0.99 0 0);
+  --border: oklch(0.87 0.012 100);
+  --input: oklch(0.87 0.012 100);
+  --ring: oklch(0.52 0.13 85);
+  --olive: oklch(0.6 0.1 112);
+  --gold: oklch(0.74 0.14 88);
+  --ink: oklch(0.24 0.06 265);
+
+  --gradient-hero:
+    radial-gradient(120% 90% at 50% -10%, oklch(0.9 0.05 100 / 70%), transparent 60%),
+    linear-gradient(160deg, oklch(0.99 0.008 100), oklch(0.95 0.015 100));
+  --shadow-glow: 0 20px 50px -30px oklch(0.52 0.13 85 / 40%);
+
+  --panel-border: oklch(0.88 0.015 100);
+  --panel-shadow: 0 18px 40px -30px oklch(0.3 0.04 105 / 30%);
+  --card-hover-shadow: 0 28px 50px -30px oklch(0.52 0.13 85 / 28%);
+  --card-hover-border: oklch(0.52 0.13 85 / 45%);
+
+  --beam-soft: oklch(0.55 0.12 88 / 20%);
+  --beam-strong: oklch(0.42 0.11 85);
+  --beam-tail: oklch(0.55 0.12 88 / 30%);
+
+  --connector: oklch(0.52 0.13 85 / 45%);
+  --connector-dot: oklch(0.58 0.14 85);
+  --connector-glow: 0 0 10px 2px oklch(0.58 0.14 85 / 35%);
+
+  --hover-glow-shadow: 0 0 14px oklch(0.52 0.13 85 / 28%);
+  --chip-hover-bg: oklch(0.52 0.13 85 / 8%);
+  --chip-hover-border: oklch(0.52 0.13 85 / 45%);
+  --shine: oklch(1 0 0 / 65%);
+  /* 0.12 kept the orbs from smearing, but it also made their 16s drift
+     imperceptible — the hero read as a still image. 0.2 is the balance: the
+     haze is visible enough to see moving, and still light enough not to muddy
+     the cream beneath it. */
+  --orb-opacity: 0.2;
+  --pulse-ring: oklch(0.52 0.13 85 / 45%);
+
+  --glare: rgb(30 26 10 / 5%);
+
+  --shimmer-a: oklch(0.42 0.1 112);
+  --shimmer-b: oklch(0.56 0.14 80);
+  --shimmer-c: oklch(0.44 0.09 100);
 }
 
 @layer base {
@@ -146,9 +275,9 @@
      made cards read as empty space rather than as cards. A brighter, more
      opaque edge plus a soft drop shadow separates every panel from the page
      without touching the shared colour tokens. */
-  border: 1px solid oklch(0.44 0.05 105 / 70%);
+  border: 1px solid var(--panel-border);
   border-radius: var(--radius-2xl);
-  box-shadow: 0 20px 44px -30px oklch(0 0 0 / 85%);
+  box-shadow: var(--panel-shadow);
 }
 
 @utility eyebrow {
@@ -208,13 +337,13 @@
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 oklch(0.82 0.15 92 / 60%);
+    box-shadow: 0 0 0 0 var(--pulse-ring);
   }
   70% {
-    box-shadow: 0 0 0 10px oklch(0.82 0.15 92 / 0%);
+    box-shadow: 0 0 0 10px transparent;
   }
   100% {
-    box-shadow: 0 0 0 0 oklch(0.82 0.15 92 / 0%);
+    box-shadow: 0 0 0 0 transparent;
   }
 }
 
@@ -280,7 +409,7 @@
   border-radius: 9999px;
   background-image: repeating-linear-gradient(
     90deg,
-    oklch(0.82 0.15 92 / 60%) 0 6px,
+    var(--connector) 0 6px,
     transparent 6px 13px
   );
 }
@@ -293,8 +422,8 @@
   margin-top: -3.5px;
   margin-left: -3.5px;
   border-radius: 9999px;
-  background-color: var(--gold);
-  box-shadow: 0 0 14px 4px oklch(0.86 0.16 90 / 65%);
+  background-color: var(--connector-dot);
+  box-shadow: var(--connector-glow);
   animation: pulse-x 2.4s linear infinite;
 }
 
@@ -307,7 +436,7 @@
   border-radius: 9999px;
   background-image: repeating-linear-gradient(
     180deg,
-    oklch(0.82 0.15 92 / 60%) 0 6px,
+    var(--connector) 0 6px,
     transparent 6px 13px
   );
 }
@@ -320,8 +449,8 @@
   margin-top: -3.5px;
   margin-left: -3.5px;
   border-radius: 9999px;
-  background-color: var(--gold);
-  box-shadow: 0 0 14px 4px oklch(0.86 0.16 90 / 65%);
+  background-color: var(--connector-dot);
+  box-shadow: var(--connector-glow);
   animation: pulse-y 2.4s linear infinite;
 }
 
@@ -339,8 +468,8 @@
   will-change: transform;
   &:hover {
     transform: translateY(-10px) rotateX(6deg) rotateY(-6deg) scale(1.02);
-    box-shadow: 0 32px 60px -30px oklch(0.82 0.15 92 / 40%);
-    border-color: oklch(0.82 0.15 92 / 55%);
+    box-shadow: var(--card-hover-shadow);
+    border-color: var(--card-hover-border);
   }
 }
 
@@ -353,8 +482,8 @@
   will-change: transform;
   &:hover {
     transform: translateY(-10px) rotateX(6deg) rotateY(6deg) scale(1.02);
-    box-shadow: 0 32px 60px -30px oklch(0.82 0.15 92 / 40%);
-    border-color: oklch(0.82 0.15 92 / 55%);
+    box-shadow: var(--card-hover-shadow);
+    border-color: var(--card-hover-border);
   }
 }
 
@@ -399,9 +528,9 @@
       from var(--beam-angle),
       transparent 0turn,
       transparent 0.6turn,
-      oklch(0.86 0.16 90 / 25%) 0.76turn,
-      oklch(0.98 0.06 95) 0.92turn,
-      oklch(0.86 0.16 90 / 40%) 0.995turn,
+      var(--beam-soft) 0.76turn,
+      var(--beam-strong) 0.92turn,
+      var(--beam-tail) 0.995turn,
       transparent 1turn
     );
     -webkit-mask:
@@ -436,7 +565,7 @@
     transform 0.25s ease;
   &:hover {
     color: var(--primary);
-    text-shadow: 0 0 18px oklch(0.82 0.15 92 / 45%);
+    text-shadow: var(--hover-glow-shadow);
   }
 }
 
@@ -448,9 +577,9 @@
     color 0.25s ease;
   &:hover {
     transform: translateY(-3px) scale(1.06);
-    border-color: oklch(0.82 0.15 92 / 60%);
+    border-color: var(--chip-hover-border);
     color: var(--primary);
-    background-color: oklch(0.82 0.15 92 / 10%);
+    background-color: var(--chip-hover-bg);
   }
 }
 
@@ -462,7 +591,7 @@
     position: absolute;
     inset: 0;
     transform: translateX(-120%) skewX(-18deg);
-    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 45%), transparent);
+    background: linear-gradient(90deg, transparent, var(--shine), transparent);
     transition: transform 0.7s ease;
   }
   &:hover::after {
@@ -482,7 +611,7 @@
   position: absolute;
   border-radius: 9999px;
   filter: blur(60px);
-  opacity: 0.5;
+  opacity: var(--orb-opacity);
   animation: drift 16s ease-in-out infinite;
   pointer-events: none;
 }
@@ -499,11 +628,11 @@
 @utility text-shimmer {
   background-image: linear-gradient(
     100deg,
-    var(--olive),
-    var(--gold),
-    oklch(0.97 0.05 95),
-    var(--gold),
-    var(--olive)
+    var(--shimmer-a),
+    var(--shimmer-b),
+    var(--shimmer-c),
+    var(--shimmer-b),
+    var(--shimmer-a)
   );
   background-size: 200% auto;
   -webkit-background-clip: text;

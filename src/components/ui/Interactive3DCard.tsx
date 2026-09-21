@@ -96,7 +96,9 @@ export function Interactive3DCard({
         ref={glareRef}
         className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-150"
         style={{
-          background: `radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.15) 0%, transparent 80%)`,
+          // --glare rather than a literal: the highlight has to darken in the
+          // light theme, where a white glare disappears into a white card.
+          background: `radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), var(--glare) 0%, transparent 80%)`,
         }}
       />
       {children}
