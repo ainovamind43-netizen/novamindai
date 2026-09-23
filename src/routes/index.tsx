@@ -186,27 +186,6 @@ const countries = [
   "South Africa",
 ];
 
-const testimonials = [
-  {
-    quote:
-      "NovaMind AI rebuilt our website and put AI agents on support. Conversion is up, and my team finally stopped drowning in repetitive tickets.",
-    name: "Sarah Jenkins",
-    company: "LuxeTech Solutions",
-  },
-  {
-    quote:
-      "They took us from page four to page one for our main keywords, then built the landing pages that turn that traffic into revenue.",
-    name: "John Paul",
-    company: "Solace Home Goods",
-  },
-  {
-    quote:
-      "The AI automation alone gave us back two working days a week. Everything they build is documented, tested, and actually maintainable.",
-    name: "Bill Jackson",
-    company: "Urban Trend",
-  },
-];
-
 /**
  * The visible FAQ is doing double duty: it answers the questions buyers type
  * into Google before they ever contact an agency, and the same array feeds the
@@ -651,29 +630,11 @@ function Index() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="mx-auto max-w-6xl px-5 py-24">
-        <span className="eyebrow">Real Brands. Real Results.</span>
-        <h2 className="mt-5 text-3xl font-bold sm:text-4xl">See how we've helped brands grow.</h2>
-        <CardConnectors className="mt-12 grid gap-12 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 100} className="h-full">
-              <Interactive3DCard className="h-full">
-                <figure className="panel card-beam h-full p-7">
-                  <div className="text-primary">★★★★★</div>
-                  <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                    "{t.quote}"
-                  </blockquote>
-                  <figcaption className="mt-5">
-                    <div className="font-semibold">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.company}</div>
-                  </figcaption>
-                </figure>
-              </Interactive3DCard>
-            </Reveal>
-          ))}
-        </CardConnectors>
-      </section>
+      {/* The reviews section stood here. It is off the homepage for now: with
+          the database not yet connected it could only ever render the empty
+          state, and a slot that is permanently blank is worse than no slot.
+          The cards, the summary and the /reviews page are all still in the
+          tree — restoring this block and its loader brings it straight back. */}
 
       {/* FAQ */}
       <section className="border-y border-border bg-card/30">

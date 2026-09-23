@@ -125,7 +125,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      // The icon set, every size generated from the one source artwork.
+      //
+      // Google reads a site's icon from the home page's <head> and will only use
+      // a square whose size is a multiple of 48px — which is what the
+      // 48/96/144/192 PNGs are for. favicon.ico carries the 16 and 32 a browser
+      // tab asks for, and the apple-touch-icon is what iOS uses when the site is
+      // saved to a home screen. The .ico is listed first so it wins for a
+      // browser that would otherwise walk the list in order.
+      { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { rel: "icon", type: "image/png", sizes: "48x48", href: "/icon-48.png" },
+      { rel: "icon", type: "image/png", sizes: "96x96", href: "/icon-96.png" },
+      { rel: "icon", type: "image/png", sizes: "144x144", href: "/icon-144.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icon-192.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
     ],
     // Runs before first paint.
     //

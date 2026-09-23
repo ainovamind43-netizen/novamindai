@@ -82,7 +82,8 @@ VERIFY AFTER DEPLOY
   /services    services
   /about       about
   /contact     contact + WhatsApp form
-  /favicon.svg static asset
+  /favicon.ico site icon, 16/32/48
+  /icon-48.png etc. the 48/96/144/192 PNGs Google reads for search results
 
 NOTES
   - This build is server-rendered, which is what you want for SEO.

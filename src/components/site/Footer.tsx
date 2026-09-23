@@ -1,15 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Clock, Zap, MessageCircle } from "lucide-react";
 import { contactDetails } from "@/lib/contact-details";
+import { LogoMark } from "./Logo";
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card/40">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <span className="font-display text-lg font-bold">
-            NovaMind <span className="text-primary">AI</span>
-          </span>
+          <div className="flex items-center gap-2.5">
+            <LogoMark />
+            <span className="font-display text-lg font-bold">
+              NovaMind <span className="text-primary">AI</span>
+            </span>
+          </div>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
             One partner, twelve growth engines. Websites, AI agents, SEO, paid media, apps and
             custom software — end-to-end execution for brands worldwide.

@@ -109,6 +109,14 @@ export const CONTACT_KEYWORDS = [
   "IT company in Pakistan contact",
 ] as const;
 
+export const REVIEWS_KEYWORDS = [
+  "NovaMind AI reviews",
+  "NovaMind AI client reviews",
+  "web design agency client reviews",
+  "SEO agency reviews",
+  "AI automation agency reviews",
+] as const;
+
 export const PRIVACY_KEYWORDS = ["NovaMind AI privacy policy", "how we handle your data"] as const;
 
 /**
@@ -197,7 +205,10 @@ export const organizationSchema = {
   slogan: "Precision growth you can stand behind.",
   logo: {
     "@type": "ImageObject",
-    url: `${SITE_URL}/favicon.svg`,
+    // The 512px render of the monogram. Google's guidance for Organization.logo
+    // is a minimum of 112x112; this is the largest raster we generate, so it is
+    // the one that survives whatever size the knowledge panel asks for.
+    url: `${SITE_URL}/icon-512.png`,
   },
   image: OG_IMAGE,
   email: contactDetails.email,
@@ -287,5 +298,8 @@ export const PAGES = [
   { path: "/services", changefreq: "weekly", priority: "0.9" },
   { path: "/about", changefreq: "monthly", priority: "0.7" },
   { path: "/contact", changefreq: "monthly", priority: "0.8" },
+  // /reviews is out of this list while the feature is unlinked and its database
+  // is not connected. A sitemap entry is a request to index a page, and asking
+  // Google to index a form that cannot save is worse than not asking at all.
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
 ] as const;

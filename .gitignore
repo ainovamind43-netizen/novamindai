@@ -17,6 +17,18 @@ dist-ssr
 .nitro
 *.local
 
+# Environment / secrets.
+#
+# Added when visitor review submissions landed: .env now holds the Neon
+# connection string — which carries the database owner's password in plain text
+# and is not a scoped or rotatable token — plus the admin password, the session
+# secret and the IP hash salt. Note .env was NOT ignored before this, because
+# nothing secret existed yet. The .env.example negation has to come after the
+# wildcard or git ignores the template too.
+.env
+.env.*
+!.env.example
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

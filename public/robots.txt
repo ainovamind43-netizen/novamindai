@@ -47,7 +47,13 @@ User-agent: Applebot-Extended
 Allow: /
 
 # Everything else.
+#
+# /admin is the review moderation page. It is password-protected and carries a
+# noindex tag of its own; this rule keeps crawlers from even requesting it. Note
+# that robots.txt is a request, not a lock — the password is what actually
+# protects it, and this only stops the URL turning up in an index.
 User-agent: *
 Allow: /
+Disallow: /admin
 
 Sitemap: https://www.novamindai.info/sitemap.xml

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
@@ -17,6 +18,12 @@ type NavLink = {
   exact?: boolean;
 };
 
+/**
+ * Reviews is deliberately absent. The page and its server functions still exist
+ * at /reviews — they are simply not linked from anywhere until the database
+ * behind them is connected, so no visitor is sent to a form that cannot save.
+ * Putting the entry back is one line here and one in the footer.
+ */
 const links: readonly NavLink[] = [
   { label: "Home", to: "/", exact: true },
   { label: "Services", to: "/services" },
@@ -30,16 +37,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <Link to="/" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-base font-bold text-primary-foreground">
-            N
-          </span>
-          <span className="font-display text-lg font-bold tracking-tight">
-            NovaMind <span className="text-primary">AI</span>
-          </span>
-        </Link>
+        <Logo />
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* gap-6 rather than gap-8 between md and lg: it was tuned for a five-link
+            row, so there is slack in it now. Widening it back is a 768px
+            judgement, not a code one. */}
+        <nav className="hidden items-center gap-6 md:flex lg:gap-8">
           {links.map((l) => (
             <Link
               key={l.label}
@@ -55,9 +58,15 @@ export function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
-          <Link to="/contact" className="btn-primary">
-            Get a Free Audit
-          </Link>
+          {/* Wrapped rather than given `hidden lg:inline-flex` directly: the
+              btn-primary utility sets its own display, and two display
+              utilities on one element resolve by source order rather than by
+              intent. */}
+          <div className="hidden lg:block">
+            <Link to="/contact" className="btn-primary">
+              Get a Free Audit
+            </Link>
+          </div>
         </div>
 
         {/* The toggle sits outside the menu rather than inside it, so the theme
