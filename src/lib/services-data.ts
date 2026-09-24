@@ -9,23 +9,23 @@ export interface Service {
 export const services: Service[] = [
   {
     cat: "Web",
-    title: "Website Design & Build",
+    title: "Website Design & Development",
     metric: "Conversion-first",
-    body: "Custom websites and landing pages designed to convert — strategy, design, build, and ongoing CRO handled end-to-end.",
-    points: ["UX & UI Design", "React & Next.js", "Landing Pages", "Core Web Vitals"],
+    body: "Custom website design and development — ecommerce stores, corporate sites and landing pages built on Shopify, WordPress or React. Strategy, design, build, and ongoing CRO handled end-to-end.",
+    points: ["Ecommerce Stores", "Shopify & WordPress", "UX & UI Design", "Core Web Vitals"],
   },
   {
     cat: "Intelligence",
-    title: "AI Automation",
+    title: "AI Automation & Agents",
     metric: "24/7 autonomous",
-    body: "Custom AI agents, chatbots, and workflow automations that save hours and unlock new revenue streams across your business.",
+    body: "AI automation services for growing businesses: custom AI agents, chatbots, and workflow automation that save hours and unlock new revenue streams.",
     points: ["AI Agents", "Workflow Automation", "Chatbots", "Data Pipelines"],
   },
   {
     cat: "Growth",
-    title: "SEO Expert",
+    title: "SEO Services",
     metric: "Top of Google",
-    body: "Rank higher, convert more. Technical SEO, content strategy, link building, and analytics that move the needle.",
+    body: "Search engine optimization services that rank you higher and convert more — technical SEO, content strategy, link building, and analytics that move the needle.",
     points: ["Technical SEO", "Content Strategy", "Link Building", "Analytics"],
   },
   {
@@ -51,16 +51,16 @@ export const services: Service[] = [
   },
   {
     cat: "Paid Media",
-    title: "Meta & Google Ads",
+    title: "Google & Meta Ads",
     metric: "Profitable ROAS",
-    body: "Full-funnel paid media on Meta and Google — creative, campaigns, tracking, and optimization for profitable, scalable ROAS.",
-    points: ["Meta Ads", "Google Ads", "Creative Production", "Tracking & Analytics"],
+    body: "Full-funnel paid media and PPC management on Google and Meta — creative, campaigns, tracking, and optimization for profitable, scalable ROAS.",
+    points: ["Google Ads", "Meta Ads", "Creative Production", "Tracking & Analytics"],
   },
   {
     cat: "Mobile",
-    title: "Android App Development",
+    title: "Mobile App Development",
     metric: "Play Store ready",
-    body: "Native and cross-platform Android apps — from MVP to Play Store launch, with clean architecture and stunning UX.",
+    body: "Android and iOS app development — from MVP to store launch, with clean architecture and stunning UX.",
     points: ["Native Kotlin", "React Native", "Play Store Launch", "Backend + APIs"],
   },
 ];

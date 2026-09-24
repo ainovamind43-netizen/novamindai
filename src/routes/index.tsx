@@ -56,13 +56,15 @@ const stats = [
 const engines = [
   "Website Design",
   "Web Development",
+  "Ecommerce Stores",
+  "Shopify & WordPress",
   "AI Agents",
   "AI Chatbots",
   "SEO",
   "Technical SEO",
-  "Meta Ads",
   "Google Ads",
-  "Android Apps",
+  "Meta Ads",
+  "Mobile Apps",
   "ERP Systems",
   "POS Software",
   "Custom Software",
@@ -195,7 +197,7 @@ const countries = [
 const faqs = [
   {
     q: "What services does NovaMind AI provide?",
-    a: "Website design and development, AI agents and automation, SEO, Meta & Google Ads, Android apps — plus custom software engineering, including ERP platforms, POS software, and internal business systems. Every project is delivered to production.",
+    a: "Website design and development, ecommerce stores, AI agents and automation, search engine optimization, Google & Meta Ads, mobile apps — plus custom software engineering, including ERP platforms, POS software, and internal business systems. Every project is delivered to production.",
   },
   {
     q: "How much does a website cost?",

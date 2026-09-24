@@ -53,50 +53,72 @@ export const THEME_COLOR_LIGHT = "#faf8f4";
  * type first.
  */
 export const HOME_KEYWORDS = [
+  // Brand first. A brand query is the only query a site can win outright, and
+  // "novamind" / "novamindai" are how people actually type the name when they
+  // have heard it and are trying to find it again.
+  "NovaMind AI",
+  "Novamind",
+  "novamindai",
+  // Then the commercial terms, highest-intent first.
   "digital agency",
   "web design agency",
+  "web design company",
+  "website design services",
   "web development company",
   "AI automation agency",
   "AI agent development company",
+  "AI chatbot development",
   "SEO agency",
   "SEO services",
   "digital marketing agency",
+  "custom software development company",
   "ERP software company",
   "POS software company",
-  "custom software development company",
+  "mobile app development company",
   "software house in Pakistan",
   "software company in Dubai",
-  "web development company in Pakistan",
-  "Android app development company",
   "Google Ads agency",
   "Meta Ads agency",
 ] as const;
 
 export const SERVICES_KEYWORDS = [
   "website design and development services",
+  "web design services",
+  "ecommerce website development",
+  "Shopify development company",
+  "WordPress development services",
   "AI automation services",
-  "AI chatbot development",
+  "AI agent development services",
+  "AI chatbot development company",
   "SEO services company",
+  "search engine optimization services",
   "ERP software development",
   "retail POS software",
   "custom software development services",
-  "digital marketing services",
-  "Android app development services",
-  "Google Ads management",
-  "Meta Ads management",
   "SaaS development company",
+  "mobile app development services",
+  "Android app development company",
+  "digital marketing services",
+  "Google Ads management services",
+  "Meta Ads management",
+  "lead generation agency",
 ] as const;
 
 export const ABOUT_KEYWORDS = [
   "about NovaMind AI",
+  "NovaMind AI company",
   "web design and software company",
   "software house in Pakistan",
   "IT company in Dubai",
   "digital agency since 2021",
   "custom software development team",
+  "software company in Lahore",
+  "software company in Karachi",
+  "software company in Islamabad",
 ] as const;
 
 export const CONTACT_KEYWORDS = [
+  "contact NovaMind AI",
   "contact web design agency",
   "hire web developer",
   "hire SEO expert",

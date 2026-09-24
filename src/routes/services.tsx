@@ -17,7 +17,7 @@ export const Route = createFileRoute("/services")({
         {
           name: "description",
           content:
-            "Web design, AI agents, SEO, Google & Meta Ads, Android apps, ERP, POS and custom software — every service NovaMind AI delivers to production for clients worldwide.",
+            "Web design, AI agents, SEO, Google & Meta Ads, mobile apps, ERP, POS and custom software — every service NovaMind AI delivers to production for clients worldwide.",
         },
         {
           property: "og:title",
@@ -124,10 +124,11 @@ function Services() {
           <h2 className="text-2xl font-bold">A full-service web, AI and software company</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             NovaMind AI is a digital agency that covers the whole stack a modern business needs:
-            website design and web development, AI automation and chatbot development, search engine
-            optimization, Google Ads and Meta Ads management, Android app development, and custom
-            software engineering. On the software side we build and deliver ERP systems for finance,
-            inventory, HR and procurement; POS software for single and multi-branch retail and
+            website design and web development, ecommerce and Shopify stores, AI automation and
+            chatbot development, search engine optimization, Google Ads and Meta Ads management,
+            mobile app development, and custom software engineering. On the software side we build
+            and deliver ERP systems for finance, inventory, HR and procurement; POS software for
+            single and multi-branch retail and
             hospitality; SaaS platforms, dashboards, dealer portals and internal business systems.
           </p>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
