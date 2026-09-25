@@ -29,6 +29,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link to="/reviews" className="hover:text-foreground">
+                Reviews
+              </Link>
+            </li>
+            <li>
               <Link to="/about" className="hover:text-foreground">
                 About
               </Link>

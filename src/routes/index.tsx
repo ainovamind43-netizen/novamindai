@@ -7,9 +7,12 @@ import { HeroAtmosphere } from "@/components/site/HeroAtmosphere";
 import { ServicesSection } from "@/components/site/ServicesSection";
 import { CardConnectors } from "@/components/site/CardConnectors";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
+import { ReviewCard, ReviewSummary } from "@/components/site/ReviewCard";
 import { contactDetails } from "@/lib/contact-details";
 import { HOME_KEYWORDS, faqSchema, pageMeta } from "@/lib/seo";
 import { services } from "@/lib/services-data";
+import { summarise } from "@/lib/reviews-types";
+import { fetchReviews } from "@/server/reviews";
 import heroImg from "@/assets/hero.jpg";
 import teamImg from "@/assets/team.jpg";
 
@@ -44,6 +47,16 @@ export const Route = createFileRoute("/")({
       scripts: [{ type: "application/ld+json", children: JSON.stringify(faqSchema(faqs)) }],
     };
   },
+  /**
+   * Reviews load during SSR, so the section that renders them arrives inside the
+   * first HTML response rather than popping in after hydration — which is also
+   * why the average is computed from this list and not from a second request.
+   *
+   * Safe to run unconditionally because fetchReviews never throws: a missing
+   * DATABASE_URL or an unreachable database degrades to an empty list, and an
+   * empty list is exactly the signal the section below uses to stay hidden.
+   */
+  loader: async () => ({ reviews: await fetchReviews() }),
   component: Index,
 });
 
@@ -238,6 +251,8 @@ const faqs = [
 ];
 
 function Index() {
+  const { reviews } = Route.useLoaderData();
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -632,11 +647,47 @@ function Index() {
         </div>
       </section>
 
-      {/* The reviews section stood here. It is off the homepage for now: with
-          the database not yet connected it could only ever render the empty
-          state, and a slot that is permanently blank is worse than no slot.
-          The cards, the summary and the /reviews page are all still in the
-          tree — restoring this block and its loader brings it straight back. */}
+      {/* Reviews, straight from the database.
+          Only the newest three are shown; the summary above them is computed
+          from the whole list, so the count stays honest while the grid stays
+          the same height whatever the table holds. The block drops out of the
+          page entirely when there are none — an empty slot reads as a broken
+          section, where its absence reads as a fact, and the empty state with
+          the invitation to write one belongs on /reviews, which the header and
+          footer link to either way. */}
+      {reviews.length > 0 && (
+        <section className="border-y border-border bg-card/30">
+          <div className="mx-auto max-w-6xl px-5 py-24">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <span className="eyebrow">Client reviews</span>
+                <h2 className="mt-5 text-3xl font-bold sm:text-4xl">
+                  What our clients say, <span className="text-shimmer">unedited.</span>
+                </h2>
+                <ReviewSummary {...summarise(reviews)} />
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                  Published exactly as written, with the reviewer's own name and company — we do not
+                  edit the wording and we do not filter out the criticism.
+                </p>
+              </div>
+              <Link to="/reviews" className="btn-ghost">
+                Read all {reviews.length} review{reviews.length === 1 ? "" : "s"}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <CardConnectors className="mt-12 grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+              {reviews.slice(0, 3).map((review, i) => (
+                <Reveal key={review.id} delay={i * 90} className="h-full">
+                  <Interactive3DCard intensity={10} className="h-full">
+                    <ReviewCard review={review} />
+                  </Interactive3DCard>
+                </Reveal>
+              ))}
+            </CardConnectors>
+          </div>
+        </section>
+      )}
 
       {/* FAQ */}
       <section className="border-y border-border bg-card/30">

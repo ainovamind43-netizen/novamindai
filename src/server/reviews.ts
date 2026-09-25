@@ -25,7 +25,7 @@ import {
   verifyPassword,
 } from "../lib/admin-session.server";
 import { isMissingTable } from "../lib/db.server";
-import { reviewInputSchema } from "../lib/review-schema";
+import { adminReviewSchema, reviewInputSchema } from "../lib/review-schema";
 import {
   clientIp,
   createReview,
@@ -36,6 +36,7 @@ import {
   listAllReviews,
   recentSubmissionCount,
   setReviewStatus,
+  updateReview,
   userAgent,
 } from "../lib/reviews.server";
 import { HONEYPOT_FIELD, RATE_LIMIT_MAX, screenSubmission } from "../lib/spam";
@@ -275,6 +276,34 @@ export const adminDeleteReview = createServerFn({ method: "POST" })
       return { ok: true };
     } catch (error) {
       console.error("[reviews] could not delete a review:", error);
+      return { ok: false, error: GENERIC_FAILURE };
+    }
+  });
+
+/**
+ * The validator is the admin schema extended with the row's id, so an edit is
+ * held to exactly the bounds the public form is — the same schema, compiled from
+ * one source. `status` is absent from it on purpose: publishing is a separate
+ * control, and an edit that could change it would be a way to republish a hidden
+ * review by accident.
+ */
+export const adminUpdateReview = createServerFn({ method: "POST" })
+  .validator(adminReviewSchema.extend({ id: z.string().uuid() }))
+  .handler(async ({ data }): Promise<AdminActionResult> => {
+    if (!isAdmin()) return { ok: false, error: SIGNED_OUT };
+
+    try {
+      await updateReview(data.id, {
+        name: data.name,
+        role: data.role,
+        rating: data.rating,
+        body: data.body,
+        service: data.service,
+        email: data.email,
+      });
+      return { ok: true };
+    } catch (error) {
+      console.error("[reviews] could not update a review:", error);
       return { ok: false, error: GENERIC_FAILURE };
     }
   });

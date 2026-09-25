@@ -68,3 +68,28 @@ export const reviewInputSchema = z.object({
 });
 
 export type ReviewInput = z.infer<typeof reviewInputSchema>;
+
+/**
+ * The part of a review a moderator may rewrite on /admin.
+ *
+ * Derived from the schema above with `.pick` rather than written out a second
+ * time, so the length bounds and the service list cannot drift: an edit the
+ * public form would have refused must not be savable from the moderation page
+ * either, and the CHECK constraints in db/schema.sql are the same bounds again.
+ *
+ * The two fields left off are the ones that only mean something at submission
+ * time — the honeypot and the elapsed-time measurement. `status` is left off as
+ * well, but for a different reason: hiding and publishing is its own control on
+ * that page, and folding it in here would let an edit silently republish a
+ * review that had been hidden on purpose.
+ */
+export const adminReviewSchema = reviewInputSchema.pick({
+  name: true,
+  role: true,
+  rating: true,
+  body: true,
+  service: true,
+  email: true,
+});
+
+export type AdminReviewInput = z.infer<typeof adminReviewSchema>;

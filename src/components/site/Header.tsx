@@ -13,20 +13,25 @@ import { ThemeToggle } from "./ThemeToggle";
  */
 type NavLink = {
   label: string;
-  to: "/" | "/services" | "/about" | "/contact";
+  to: "/" | "/services" | "/reviews" | "/about" | "/contact";
   /** Only Home highlights on an exact match; the rest stay lit on sub-paths. */
   exact?: boolean;
 };
 
 /**
- * Reviews is deliberately absent. The page and its server functions still exist
- * at /reviews — they are simply not linked from anywhere until the database
- * behind them is connected, so no visitor is sent to a form that cannot save.
- * Putting the entry back is one line here and one in the footer.
+ * Reviews sits between Services and About, which is where a visitor decides
+ * whether to believe the services page.
+ *
+ * It was held out of this row on purpose until the table behind it existed. The
+ * page and its server functions were live the whole time; linking them while the
+ * database was unconnected would only have sent visitors to a form whose one
+ * possible answer was "reviews are not being saved yet". If the reviews table is
+ * ever dropped again, take this entry back out with it.
  */
 const links: readonly NavLink[] = [
   { label: "Home", to: "/", exact: true },
   { label: "Services", to: "/services" },
+  { label: "Reviews", to: "/reviews" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];
@@ -40,8 +45,8 @@ export function Header() {
         <Logo />
 
         {/* gap-6 rather than gap-8 between md and lg: it was tuned for a five-link
-            row, so there is slack in it now. Widening it back is a 768px
-            judgement, not a code one. */}
+            row, which is what this is again now Reviews is back in it. Widening
+            it back is a 768px judgement, not a code one. */}
         <nav className="hidden items-center gap-6 md:flex lg:gap-8">
           {links.map((l) => (
             <Link

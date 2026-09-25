@@ -181,6 +181,32 @@ export async function setReviewStatus(
   await db()`update reviews set status = ${status} where id = ${id}`;
 }
 
+/**
+ * Rewrite the editable fields of an existing review.
+ *
+ * `status` is deliberately not among them — publishing and hiding is
+ * `setReviewStatus`, behind its own button, and letting an edit carry a status
+ * would mean saving a typo fix could silently republish something the owner had
+ * hidden.
+ *
+ * `created_at`, `ip_hash` and `user_agent` are left alone too: they record the
+ * submission rather than the text, and the rate limit counts rows in a window
+ * rather than reading any field this touches.
+ */
+export async function updateReview(id: string, input: NewReview): Promise<void> {
+  await db()`
+    update reviews
+    set
+      name = ${input.name},
+      role = ${input.role},
+      rating = ${input.rating},
+      body = ${input.body},
+      service = ${input.service},
+      email = ${input.email}
+    where id = ${id}
+  `;
+}
+
 export async function deleteReview(id: string): Promise<void> {
   await db()`delete from reviews where id = ${id}`;
 }
