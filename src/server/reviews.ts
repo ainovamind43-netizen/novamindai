@@ -39,8 +39,10 @@ import {
   updateReview,
   userAgent,
 } from "../lib/reviews.server";
+import { listAllBlogs } from "../lib/blogs.server";
 import { HONEYPOT_FIELD, RATE_LIMIT_MAX, screenSubmission } from "../lib/spam";
 import type { AdminReview, PublicReview } from "../lib/reviews-types";
+import type { AdminBlog } from "../lib/blogs-types";
 
 /** Shown whenever something failed on our side rather than in the visitor's text. */
 const GENERIC_FAILURE =
@@ -193,6 +195,7 @@ export type AdminState =
       configured: true;
       authenticated: true;
       reviews: AdminReview[];
+      blogs: AdminBlog[];
       /**
        * The list could not be read, so `reviews` being empty means "we could not
        * ask", not "there are none". The page says so rather than rendering the
@@ -208,10 +211,11 @@ export const adminState = createServerFn({ method: "POST" }).handler(
     if (!isAdmin()) return { configured: true, authenticated: false };
 
     try {
-      return { configured: true, authenticated: true, reviews: await listAllReviews() };
+      const [reviews, blogs] = await Promise.all([listAllReviews(), listAllBlogs()]);
+      return { configured: true, authenticated: true, reviews, blogs };
     } catch (error) {
       console.error("[reviews] could not load the admin list:", error);
-      return { configured: true, authenticated: true, reviews: [], databaseError: true };
+      return { configured: true, authenticated: true, reviews: [], blogs: [], databaseError: true };
     }
   },
 );

@@ -139,6 +139,17 @@ export const REVIEWS_KEYWORDS = [
   "AI automation agency reviews",
 ] as const;
 
+export const BLOG_KEYWORDS = [
+  "NovaMind AI blog",
+  "web design insights",
+  "AI automation articles",
+  "SEO tips and guides",
+  "software development best practices",
+  "ERP and POS software guide",
+  "digital marketing agency blog",
+  "tech agency insights Pakistan Dubai UK US",
+] as const;
+
 export const PRIVACY_KEYWORDS = ["NovaMind AI privacy policy", "how we handle your data"] as const;
 
 /**
@@ -318,6 +329,7 @@ export function faqSchema(faqs: readonly { q: string; a: string }[]) {
 export const PAGES = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/services", changefreq: "weekly", priority: "0.9" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/about", changefreq: "monthly", priority: "0.7" },
   { path: "/contact", changefreq: "monthly", priority: "0.8" },
   // /reviews is out of this list while the feature is unlinked and its database

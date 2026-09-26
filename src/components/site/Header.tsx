@@ -13,7 +13,7 @@ import { ThemeToggle } from "./ThemeToggle";
  */
 type NavLink = {
   label: string;
-  to: "/" | "/services" | "/reviews" | "/about" | "/contact";
+  to: "/" | "/services" | "/reviews" | "/blog" | "/about" | "/contact";
   /** Only Home highlights on an exact match; the rest stay lit on sub-paths. */
   exact?: boolean;
 };
@@ -32,6 +32,7 @@ const links: readonly NavLink[] = [
   { label: "Home", to: "/", exact: true },
   { label: "Services", to: "/services" },
   { label: "Reviews", to: "/reviews" },
+  { label: "Blog", to: "/blog" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];

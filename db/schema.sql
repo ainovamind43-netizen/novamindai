@@ -63,3 +63,20 @@ create index if not exists reviews_ip_idx
 -- would protect nothing while looking like a second layer of defence. The real
 -- control is that DATABASE_URL is read only inside `.server.` modules — see
 -- src/lib/db.server.ts.
+
+-- NovaMind AI — blogs table.
+create table if not exists public.blogs (
+  id          uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  title       text not null check (char_length(title) between 3 and 150),
+  slug        text not null unique check (char_length(slug) between 3 and 150),
+  excerpt     text not null check (char_length(excerpt) between 10 and 300),
+  body        text not null check (char_length(body) >= 20),
+  category    text not null check (char_length(category) between 2 and 50),
+  read_time   text not null check (char_length(read_time) between 2 and 20),
+  status      text not null default 'published' check (status in ('published', 'draft', 'hidden'))
+);
+
+create index if not exists blogs_public_idx
+  on public.blogs (status, created_at desc);
+
