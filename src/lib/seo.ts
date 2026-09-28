@@ -140,14 +140,22 @@ export const REVIEWS_KEYWORDS = [
 ] as const;
 
 export const BLOG_KEYWORDS = [
-  "NovaMind AI blog",
-  "web design insights",
-  "AI automation articles",
-  "SEO tips and guides",
-  "software development best practices",
-  "ERP and POS software guide",
-  "digital marketing agency blog",
-  "tech agency insights Pakistan Dubai UK US",
+  "hire web design agency",
+  "hire AI automation agency",
+  "hire custom software developers",
+  "custom ERP software development company",
+  "retail POS software development Dubai",
+  "AI chatbot development company USA UK",
+  "hire full stack web developers",
+  "best software house in Pakistan",
+  "software company in Dubai UAE",
+  "SEO agency for B2B and SaaS",
+  "custom web application development services",
+  "enterprise workflow automation consultants",
+  "hire mobile app development company",
+  "e-commerce website development agency",
+  "top digital agency for custom software",
+  "NovaMind AI project case studies and guides",
 ] as const;
 
 export const PRIVACY_KEYWORDS = ["NovaMind AI privacy policy", "how we handle your data"] as const;
@@ -215,6 +223,12 @@ const KNOWS_ABOUT = [
   "Custom software development",
   "Android app development",
   "SaaS development",
+  "Next.js development",
+  "React development",
+  "B2B lead generation",
+  "E-commerce development",
+  "Custom API integration",
+  "Workflow automation",
 ];
 
 /**

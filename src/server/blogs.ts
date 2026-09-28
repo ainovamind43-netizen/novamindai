@@ -47,7 +47,7 @@ export const createNewBlog = createServerFn({ method: "POST" })
 export const updateExistingBlog = createServerFn({ method: "POST" })
   .validator(
     z.object({
-      id: z.string().uuid(),
+      id: z.string().min(1),
       data: blogInputSchema,
     }),
   )
@@ -65,7 +65,7 @@ export const updateExistingBlog = createServerFn({ method: "POST" })
 export const changeBlogStatus = createServerFn({ method: "POST" })
   .validator(
     z.object({
-      id: z.string().uuid(),
+      id: z.string().min(1),
       status: z.enum(["published", "draft", "hidden"]),
     }),
   )
@@ -81,7 +81,7 @@ export const changeBlogStatus = createServerFn({ method: "POST" })
   });
 
 export const removeBlog = createServerFn({ method: "POST" })
-  .validator(z.object({ id: z.string().uuid() }))
+  .validator(z.object({ id: z.string().min(1) }))
   .handler(async ({ data }): Promise<BlogActionResult> => {
     if (!isAdmin()) return { ok: false, error: "Unauthorized" };
     try {
