@@ -107,7 +107,7 @@ function About() {
             Riyadh and Doha; and in Pakistan, where we build for companies in Lahore, Karachi and
             Islamabad.
           </p>
-          <p className="mt-5 text-sm font-semibold text-primary">— Usman Zafar, Founder</p>
+          <p className="mt-5 text-sm font-semibold text-primary">— Alishba, Founder</p>
           <Link to="/contact" className="btn-ghost mt-7">
             Let's Talk
           </Link>

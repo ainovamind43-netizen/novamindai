@@ -23,23 +23,20 @@ export const Route = createFileRoute("/")({
       links,
       meta: [
         ...urlMeta,
-        // Keyword-first, brand last: the first ~60 characters are all Google
-        // reliably shows, so "Web Design, AI Automation & SEO Agency" leads and
-        // "NovaMind AI" closes.
-        { title: "Web Design, AI Automation & SEO Agency | NovaMind AI" },
+        { title: "NovaMind AI | AI Automation & Agentic AI Solutions" },
         {
           name: "description",
           content:
-            "NovaMind AI is a web design, AI automation and SEO agency building websites, AI agents, ERP, POS and custom software for clients in the US, UK, Gulf and Pakistan.",
+            "NovaMind AI provides AI automation, AI agent development, chatbots, custom software, web development and intelligent business automation solutions in Pakistan and worldwide.",
         },
         {
           property: "og:title",
-          content: "Web Design, AI Automation & SEO Agency — NovaMind AI",
+          content: "NovaMind AI | AI Automation & Agentic AI Solutions",
         },
         {
           property: "og:description",
           content:
-            "Real projects, really delivered. Websites, AI agents, SEO, paid media, ERP platforms, POS software and custom business systems.",
+            "NovaMind AI provides AI automation, AI agent development, chatbots, custom software, web development and intelligent business automation solutions in Pakistan and worldwide.",
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -283,13 +280,11 @@ function Index() {
                 copy. "Web design", "AI automation" and "SEO" are the three
                 terms buyers actually search. */}
             <h1 className="mt-6 text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
-              Web design, AI automation and SEO that{" "}
-              <span className="text-shimmer">scale your brand</span>.
+              AI Automation &amp; Agentic AI Solutions for{" "}
+              <span className="text-shimmer">Modern Businesses</span>.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Websites, AI agents, SEO, Google &amp; Meta Ads, Android apps, ERP and POS software,
-              and custom business systems — one partner, twelve growth engines, end-to-end
-              execution.
+              NovaMind AI is an AI automation and software development company providing AI agents, business automation, AI chatbots, custom software, web applications and intelligent workflow solutions for businesses in Pakistan and worldwide.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="btn-primary shine">
