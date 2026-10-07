@@ -23,20 +23,20 @@ export const Route = createFileRoute("/")({
       links,
       meta: [
         ...urlMeta,
-        { title: "NovaMind AI | AI Automation & Agentic AI Solutions" },
+        { title: "NovaMind AI | Website Developer, App Developer & SEO Expert" },
         {
           name: "description",
           content:
-            "NovaMind AI provides AI automation, AI agent development, chatbots, custom software, web development and intelligent business automation solutions in Pakistan and worldwide.",
+            "NovaMind AI is a professional website developer, mobile app developer, and SEO expert agency providing custom websites, Android & iOS apps, technical SEO, AI automation and software solutions worldwide.",
         },
         {
           property: "og:title",
-          content: "NovaMind AI | AI Automation & Agentic AI Solutions",
+          content: "NovaMind AI | Website Developer, App Developer & SEO Expert",
         },
         {
           property: "og:description",
           content:
-            "NovaMind AI provides AI automation, AI agent development, chatbots, custom software, web development and intelligent business automation solutions in Pakistan and worldwide.",
+            "Professional website development, mobile app development, SEO expert services, AI agents, and custom software engineering for businesses worldwide.",
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
