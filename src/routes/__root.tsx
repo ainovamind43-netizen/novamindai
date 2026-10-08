@@ -188,6 +188,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { CustomerSupportAgent } from "@/components/site/CustomerSupportAgent";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -195,6 +197,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <CustomerSupportAgent />
     </QueryClientProvider>
   );
 }
