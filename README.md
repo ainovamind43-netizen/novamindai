@@ -56,3 +56,4 @@ public/            favicon, robots.txt
 Service copy, categories and metrics live in one place — `src/lib/services-data.ts`.
 Page copy (stats, FAQs, testimonials, roadmap) is defined as constants at the top
 of each file in `src/routes/`.
+ Testing GitHub update 123
