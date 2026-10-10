@@ -30,7 +30,7 @@ export function Footer() {
             </li>
             <li>
               <Link to="/reviews" className="hover:text-foreground">
-                Review
+                Reviews
               </Link>
             </li>
             <li>
