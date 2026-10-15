@@ -1,3 +1,5 @@
+process.env.DANGEROUSLY_DEPLOY_VULNERABLE_TANSTACK_START_XSS = "1";
+
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
