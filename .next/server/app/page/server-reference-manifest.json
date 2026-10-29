@@ -1,0 +1,95 @@
+{
+  "node": {
+    "0096aae40c211c3d7feb17d1715fb9f38cdede9ac5": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "logout",
+      "filename": "src/server/reviews.ts"
+    },
+    "00a276f55ecf6ed4cb5f2f2fdcceef644915546d67": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "fetchReviews",
+      "filename": "src/server/reviews.ts"
+    },
+    "00c37987cbb0d7c96433c0ec2ab4d625bcd0165a2f": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "fetchAdminData",
+      "filename": "src/server/reviews.ts"
+    },
+    "00d71725cdcb16598e37ec14e66e39d93458b1dce4": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "adminState",
+      "filename": "src/server/reviews.ts"
+    },
+    "40a2fdb084412fc134c0904a3023eb6600070797d2": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "submitReview",
+      "filename": "src/server/reviews.ts"
+    },
+    "40c70c1b8cd7247a45d33d5f5aebe5a352d19576ec": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "removeReview",
+      "filename": "src/server/reviews.ts"
+    },
+    "40eb9517de603f20ba6e095f475d7df5f5ec030f27": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "login",
+      "filename": "src/server/reviews.ts"
+    },
+    "609b756c1eec65d2c94ef8b55c82fd0ada7b058f5a": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "updateReviewStatus",
+      "filename": "src/server/reviews.ts"
+    },
+    "60f84ae29926da06d94c47308436871ed49ae38436": {
+      "workers": {
+        "app/page": {
+          "moduleId": 90092,
+          "async": false
+        }
+      },
+      "exportedName": "editReview",
+      "filename": "src/server/reviews.ts"
+    }
+  },
+  "edge": {}
+}

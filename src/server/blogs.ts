@@ -1,5 +1,7 @@
-import { createServerFn } from "@tanstack/react-start";
+'use server';
+
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { isAdmin } from "../lib/admin-session.server";
 import {
   createBlog,
@@ -12,83 +14,65 @@ import {
 import { blogInputSchema, type BlogInput } from "../lib/blog-schema";
 import type { AdminBlog, PublicBlog } from "../lib/blogs-types";
 
-export const fetchPublicBlogs = createServerFn({ method: "GET" }).handler(
-  async (): Promise<PublicBlog[]> => getPublicBlogs(),
-);
+export async function fetchPublicBlogs(): Promise<PublicBlog[]> {
+  return getPublicBlogs();
+}
 
-export const checkAdminSession = createServerFn({ method: "POST" }).handler(
-  async (): Promise<boolean> => {
-    return isAdmin();
-  },
-);
+export async function checkAdminSession(): Promise<boolean> {
+  return isAdmin();
+}
 
-export const fetchAdminBlogs = createServerFn({ method: "GET" }).handler(
-  async (): Promise<AdminBlog[]> => {
-    if (!isAdmin()) throw new Error("Unauthorized");
-    return listAllBlogs();
-  },
-);
+export async function fetchAdminBlogs(): Promise<AdminBlog[]> {
+  if (!(await isAdmin())) throw new Error("Unauthorized");
+  return listAllBlogs();
+}
 
 export type BlogActionResult = { ok: true } | { ok: false; error: string };
 
-export const createNewBlog = createServerFn({ method: "POST" })
-  .validator(blogInputSchema)
-  .handler(async ({ data }): Promise<BlogActionResult> => {
-    if (!isAdmin()) return { ok: false, error: "Unauthorized" };
-    try {
-      await createBlog(data);
-      return { ok: true };
-    } catch (error) {
-      console.error("[blogs] createNewBlog failed:", error);
-      return { ok: false, error: "Failed to create blog post." };
-    }
-  });
+export async function createNewBlog(data: BlogInput): Promise<BlogActionResult> {
+  if (!(await isAdmin())) return { ok: false, error: "Unauthorized" };
+  try {
+    await createBlog(data);
+    revalidatePath("/blog");
+    return { ok: true };
+  } catch (error) {
+    console.error("[blogs] createNewBlog failed:", error);
+    return { ok: false, error: "Failed to create blog post." };
+  }
+}
 
-export const updateExistingBlog = createServerFn({ method: "POST" })
-  .validator(
-    z.object({
-      id: z.string().min(1),
-      data: blogInputSchema,
-    }),
-  )
-  .handler(async ({ data }): Promise<BlogActionResult> => {
-    if (!isAdmin()) return { ok: false, error: "Unauthorized" };
-    try {
-      await updateBlog(data.id, data.data);
-      return { ok: true };
-    } catch (error) {
-      console.error("[blogs] updateExistingBlog failed:", error);
-      return { ok: false, error: "Failed to update blog post." };
-    }
-  });
+export async function updateExistingBlog(id: string, data: BlogInput): Promise<BlogActionResult> {
+  if (!(await isAdmin())) return { ok: false, error: "Unauthorized" };
+  try {
+    await updateBlog(id, data);
+    revalidatePath("/blog");
+    return { ok: true };
+  } catch (error) {
+    console.error("[blogs] updateExistingBlog failed:", error);
+    return { ok: false, error: "Failed to update blog post." };
+  }
+}
 
-export const changeBlogStatus = createServerFn({ method: "POST" })
-  .validator(
-    z.object({
-      id: z.string().min(1),
-      status: z.enum(["published", "draft", "hidden"]),
-    }),
-  )
-  .handler(async ({ data }): Promise<BlogActionResult> => {
-    if (!isAdmin()) return { ok: false, error: "Unauthorized" };
-    try {
-      await setBlogStatus(data.id, data.status);
-      return { ok: true };
-    } catch (error) {
-      console.error("[blogs] changeBlogStatus failed:", error);
-      return { ok: false, error: "Failed to update blog status." };
-    }
-  });
+export async function changeBlogStatus(id: string, status: "published" | "draft" | "hidden"): Promise<BlogActionResult> {
+  if (!(await isAdmin())) return { ok: false, error: "Unauthorized" };
+  try {
+    await setBlogStatus(id, status);
+    revalidatePath("/blog");
+    return { ok: true };
+  } catch (error) {
+    console.error("[blogs] changeBlogStatus failed:", error);
+    return { ok: false, error: "Failed to update blog status." };
+  }
+}
 
-export const removeBlog = createServerFn({ method: "POST" })
-  .validator(z.object({ id: z.string().min(1) }))
-  .handler(async ({ data }): Promise<BlogActionResult> => {
-    if (!isAdmin()) return { ok: false, error: "Unauthorized" };
-    try {
-      await deleteBlog(data.id);
-      return { ok: true };
-    } catch (error) {
-      console.error("[blogs] removeBlog failed:", error);
-      return { ok: false, error: "Failed to delete blog post." };
-    }
-  });
+export async function removeBlog(id: string): Promise<BlogActionResult> {
+  if (!(await isAdmin())) return { ok: false, error: "Unauthorized" };
+  try {
+    await deleteBlog(id);
+    revalidatePath("/blog");
+    return { ok: true };
+  } catch (error) {
+    console.error("[blogs] removeBlog failed:", error);
+    return { ok: false, error: "Failed to delete blog post." };
+  }
+}

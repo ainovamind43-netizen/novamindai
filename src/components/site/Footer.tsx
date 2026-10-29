@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Mail, Clock, Zap, MessageCircle } from "lucide-react";
 import { contactDetails } from "@/lib/contact-details";
 import { LogoMark } from "./Logo";
@@ -24,32 +24,32 @@ export function Footer() {
           <h4 className="text-sm font-semibold">Company</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>
-              <Link to="/services" className="hover:text-foreground">
+              <Link href="/services" className="hover:text-foreground">
                 Services
               </Link>
             </li>
             <li>
-              <Link to="/reviews" className="hover:text-foreground">
+              <Link href="/reviews" className="hover:text-foreground">
                 Reviews
               </Link>
             </li>
             <li>
-              <Link to="/blog" className="hover:text-foreground">
+              <Link href="/blog" className="hover:text-foreground">
                 Blog
               </Link>
             </li>
             <li>
-              <Link to="/about" className="hover:text-foreground">
+              <Link href="/about" className="hover:text-foreground">
                 About
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="hover:text-foreground">
+              <Link href="/contact" className="hover:text-foreground">
                 Contact
               </Link>
             </li>
             <li>
-              <Link to="/privacy" className="hover:text-foreground">
+              <Link href="/privacy" className="hover:text-foreground">
                 Privacy Policy
               </Link>
             </li>

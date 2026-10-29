@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from "react";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import type { z } from "zod";
 
 import { reviewInputSchema } from "@/lib/review-schema";
@@ -16,14 +18,6 @@ type Status =
   | { kind: "sent" }
   | { kind: "error"; message: string };
 
-/**
- * The fields this form renders an error message beside.
- *
- * A union rather than `Record<string, string>` because this project turns on
- * noPropertyAccessFromIndexSignature: an index signature would force bracket
- * access at every use site and, worse, would accept `errors.nmae` without
- * complaint. Listing the keys means a typo is a compile error.
- */
 type FieldName = "name" | "role" | "rating" | "body" | "service" | "email";
 type FieldErrors = Partial<Record<FieldName, string>>;
 
@@ -36,7 +30,6 @@ const FIELD_NAMES: readonly FieldName[] = [
   "email",
 ];
 
-/** The first message per field. One is enough to act on. */
 function fieldErrors(error: z.ZodError): FieldErrors {
   const out: FieldErrors = {};
 
@@ -51,32 +44,14 @@ function fieldErrors(error: z.ZodError): FieldErrors {
   return out;
 }
 
-/**
- * The public review form.
- *
- * Publishing is immediate — there is no approval step — so the copy says so
- * rather than leaving a visitor to wonder. The email field says what it is for
- * as well: it is stored for the owner's records and never rendered on the page,
- * and a form that quietly collects an address is worse than one that explains.
- */
 export function ReviewForm() {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [errors, setErrors] = useState<FieldErrors>({});
-
-  /**
-   * When the form was rendered, for the elapsed-time spam check.
-   *
-   * A lazy initialiser rather than a ref or an effect: it must have a value on
-   * the very first render so the number is never missing, and it is never
-   * painted, so the server's value and the browser's differing is not a
-   * hydration mismatch. Either timestamp is earlier than the submit, so the
-   * measurement can only ever err towards giving a real visitor more time.
-   */
   const [renderedAt] = useState(() => Date.now());
 
-  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status.kind === "sending") return;
 
@@ -94,9 +69,6 @@ export function ReviewForm() {
       elapsedMs: Date.now() - renderedAt,
     };
 
-    // Checked here first so a typo is answered inline rather than by a round
-    // trip. The server runs the identical schema — this is convenience, not the
-    // enforcement.
     const parsed = reviewInputSchema.safeParse(candidate);
     if (!parsed.success) {
       setErrors(fieldErrors(parsed.error));
@@ -108,7 +80,7 @@ export function ReviewForm() {
     setStatus({ kind: "sending" });
 
     try {
-      const result = await submitReview({ data: parsed.data });
+      const result = await submitReview(parsed.data);
 
       if (!result.ok) {
         setStatus({ kind: "error", message: result.error });
@@ -118,10 +90,7 @@ export function ReviewForm() {
       form.reset();
       setRating(0);
       setStatus({ kind: "sent" });
-
-      // Re-runs the page's loader, so the review just posted is in the list
-      // below without the visitor having to reload.
-      await router.invalidate();
+      router.refresh();
     } catch (error) {
       console.error("[reviews] submission failed:", error);
       setStatus({
@@ -160,16 +129,6 @@ export function ReviewForm() {
         </p>
       </div>
 
-      {/* The honeypot. Positioned off-screen rather than hidden with
-          `display: none`, because plenty of bots skip what is not rendered.
-          aria-hidden keeps it out of the accessibility tree and tabIndex -1 out
-          of the tab order, so no person can reach it — which is the whole point:
-          the server treats any value here as proof of a script.
-
-          The name and the label are both meaningless on purpose. See the note
-          on HONEYPOT_FIELD: a field called "website" would be filled by browser
-          autofill for some real visitors, and a false positive here has a real
-          cost. */}
       <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
         <input
@@ -186,9 +145,6 @@ export function ReviewForm() {
         <div className="mt-2 flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((value) => (
             <label key={value} className="cursor-pointer">
-              {/* A real radio input, visually hidden. Radio gives arrow-key
-                  navigation and correct screen-reader semantics for free, where
-                  a row of <button>s would need all of that rebuilt by hand. */}
               <input
                 type="radio"
                 name="rating"
@@ -328,7 +284,6 @@ export function ReviewForm() {
         {status.kind === "sending" ? "Publishing…" : "Publish my review"}
       </button>
 
-      {/* aria-live so the outcome is announced rather than only shown. */}
       <p aria-live="polite" className="text-center text-sm">
         {status.kind === "error" && <span className="text-destructive">{status.message}</span>}
       </p>

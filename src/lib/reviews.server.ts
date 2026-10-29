@@ -10,7 +10,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { getRequestHeader, getRequestIP } from "@tanstack/react-start/server";
+import { headers } from "next/headers";
 
 import { db, isConfigured } from "./db.server";
 import { RATE_LIMIT_WINDOW_MS } from "./spam";
@@ -242,17 +242,11 @@ export async function recentSubmissionCount(ipHash: string): Promise<number> {
  * function ever sees it. On a host that passes a client-supplied value through,
  * this is spoofable and the rate limit becomes advisory.
  */
-export function clientIp(): string {
-  return getRequestIP({ xForwardedFor: true }) ?? "unknown";
+export async function clientIp(): Promise<string> {
+  const headersList = await headers();
+  return headersList.get("x-forwarded-for") ?? "unknown";
 }
 
-/**
- * A saltless hash of an IPv4 address is not anonymity — the whole space is about
- * four billion values, which is seconds of work. So when IP_HASH_SALT is unset
- * this returns null and no identifier is stored at all: the rate limiter stops
- * working, and nobody's address is written down in a form that can be reversed.
- * That is the right way round. Privacy fails closed, spam control fails open.
- */
 export function hashIp(ip: string): string | null {
   const salt = process.env["IP_HASH_SALT"];
   if (!salt) {
@@ -264,6 +258,7 @@ export function hashIp(ip: string): string | null {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
-export function userAgent(): string | null {
-  return getRequestHeader("user-agent")?.slice(0, 300) ?? null;
+export async function userAgent(): Promise<string | null> {
+  const headersList = await headers();
+  return headersList.get("user-agent")?.slice(0, 300) ?? null;
 }

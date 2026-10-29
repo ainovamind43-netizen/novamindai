@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { services } from "@/lib/services-data";
 import { Reveal } from "@/components/site/Reveal";
 import { Interactive3DCard } from "@/components/ui/Interactive3DCard";
@@ -34,7 +34,7 @@ export function ServicesSection() {
                     </li>
                   ))}
                 </ul>
-                <Link to="/contact" className="mt-auto pt-6 text-sm font-semibold text-primary">
+                <Link href="/contact" className="mt-auto pt-6 text-sm font-semibold text-primary">
                   <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">
                     Get started with {s.title} →
                   </span>
